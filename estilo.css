@@ -1,0 +1,390 @@
+/* ================================================
+   VARIABLES GLOBALES
+   Son como "apodos" para colores y medidas.
+   Si quieres cambiar un color en toda la web,
+   solo lo cambias aquí y se actualiza en todos lados.
+================================================ */
+:root {
+  /* Colores principales de la paleta */
+  --saddle:    saddlebrown;   /* marrón principal (menú, botones) */
+  --gold:      goldenrod;     /* dorado (bordes, detalles, textos destacados) */
+  --brick:     firebrick;     /* rojo ladrillo (precios, badges de oferta) */
+  --cream:     cornsilk;      /* crema claro (fondo general, textos sobre fondo oscuro) */
+  --cream2:    antiquewhite;  /* crema ligeramente más oscuro (secciones alternas) */
+  --darkbrown: #2a1a0e;       /* marrón muy oscuro (footer, textos principales) */
+  --white:     white;         /* blanco puro */
+
+  /* Medidas reutilizables */
+  --ancho_cajon: 280px;  /* ancho del menú lateral deslizable */
+  --velocidad:   0.4s;   /* duración de las animaciones de apertura/cierre */
+}
+
+/* ================================================
+   RESET Y BASE
+   Los navegadores aplican estilos por defecto
+   (márgenes, rellenos) que varían entre Chrome,
+   Firefox, etc. Aquí los borramos todos para
+   empezar desde cero y tener control total.
+================================================ */
+
+/* El * significa "aplica esto a TODOS los elementos de la página" */
+/* *::before y *::after incluyen también los pseudo-elementos que genera el CSS */
+*, *::before, *::after {
+  margin: 0;              /* elimina el espacio exterior por defecto */
+  padding: 0;             /* elimina el relleno interior por defecto */
+  box-sizing: border-box; /* hace que el borde y padding estén INCLUIDOS en el ancho/alto
+                             (sin esto, agregar padding "infla" el elemento hacia afuera) */
+}
+
+/* "body" es toda la página visible */
+body {
+  background: var(--cream);          /* fondo crema en toda la página */
+  color: var(--darkbrown);           /* color de texto por defecto */
+  font-family: 'Lato', sans-serif;   /* tipografía principal */
+  overflow-x: hidden;                /* oculta el scroll horizontal si algo se sale
+                                        levemente del borde (evita barra de scroll fea) */
+}
+
+/* Quita el subrayado de todos los enlaces por defecto */
+a { text-decoration: none; }
+
+
+/* ================================================
+   CAPA OSCURA (overlay del cajón)
+   Es una capa semitransparente negra que cubre
+   toda la pantalla cuando el menú está abierto.
+   Da la sensación de que el fondo "se apaga".
+================================================ */
+.capa_oscura {
+  position: fixed;              /* se queda fija en pantalla aunque hagas scroll */
+  inset: 0;                     /* atajo para: top:0; right:0; bottom:0; left:0
+                                   → cubre toda la pantalla */
+  background: rgba(0,0,0,0.55); /* negro al 55% de opacidad (semitransparente) */
+  opacity: 0;                   /* empieza invisible */
+  pointer-events: none;         /* mientras es invisible, los clics la "atraviesan"
+                                   (como si no existiera) */
+  transition: opacity var(--velocidad); /* cuando cambie la opacidad, lo hace suavemente
+                                           en 0.4 segundos */
+  z-index: 10;                  /* número de "capa": está encima de la página (z-index:0)
+                                   pero debajo del menú (z-index:20) */
+}
+
+/* Cuando el JS le agrega la clase "visible", la capa aparece */
+.capa_oscura.visible {
+  opacity: 1;          /* se vuelve visible (con la transición suave de arriba) */
+  pointer-events: all; /* ahora SÍ recibe clics (para cerrar el menú al hacer clic afuera) */
+}
+
+
+/* ================================================
+   MENÚ CAJÓN
+   Es el panel lateral que entra desde la izquierda.
+   Empieza fuera de pantalla y se desliza hacia adentro.
+================================================ */
+.menu_cajon {
+  position: fixed;                /* fijo en pantalla, no se mueve con el scroll */
+  top: 0; left: 0;                /* pegado a la esquina superior izquierda */
+  width: var(--ancho_cajon);      /* 280px de ancho (definido en variables) */
+  height: 100%;                   /* ocupa toda la altura de la pantalla */
+  background: var(--saddle);      /* fondo marrón */
+  padding: 2rem 1.5rem;           /* espacio interno: 2rem arriba/abajo, 1.5rem a los lados */
+  transform: translateX(-100%);   /* lo mueve 100% de su propio ancho hacia la IZQUIERDA
+                                     → queda completamente fuera de pantalla (oculto) */
+  transition: transform var(--velocidad) ease; /* cuando cambie el transform, lo hace
+                                                  suavemente en 0.4 segundos */
+  z-index: 20;                    /* encima de la capa oscura (z-index:10) y de todo lo demás */
+}
+
+/* Cuando el JS le agrega la clase "abierto", el menú entra a pantalla */
+.menu_cajon.abierto {
+  transform: translateX(0); /* vuelve a su posición original → se desliza hacia adentro */
+}
+
+/* Logo "LBP" dentro del menú */
+.menu_cajon__logo {
+  font-family: 'Playfair Display', serif; /* tipografía elegante con serifa */
+  font-size: 2.2rem;                      /* tamaño grande */
+  color: var(--gold);                     /* color dorado */
+  margin: 1rem 0 2rem;                    /* espacio: 1rem arriba, 0 a los lados, 2rem abajo */
+  letter-spacing: 4px;                    /* espacio entre letras */
+  text-align: center;                     /* centrado horizontalmente */
+}
+
+/* La lista de links del menú (sin viñetas) */
+.menu_cajon__lista {
+  list-style: none; /* quita los puntos/números de la lista */
+}
+
+/* Cada elemento de la lista tiene una línea separadora abajo */
+.menu_cajon__lista li {
+  border-bottom: 1px solid rgba(255,255,255,0.1); /* línea blanca muy tenue */
+}
+
+/* Cada link del menú */
+.menu_cajon__lista a {
+  display: block;              /* ocupa todo el ancho disponible (más fácil de hacer clic) */
+  padding: 0.9rem 0;           /* espacio interno arriba y abajo (hace el área de clic más grande) */
+  color: var(--cream);         /* texto color crema */
+  font-size: 0.88rem;          /* tamaño de letra pequeño */
+  letter-spacing: 2px;         /* espacio entre letras */
+  text-transform: uppercase;   /* convierte el texto a MAYÚSCULAS automáticamente */
+  transition: color 0.2s, padding-left 0.2s; /* cuando cambien color y padding, lo hace suave */
+}
+
+/* Al pasar el mouse sobre un link: se vuelve dorado y se mueve 8px a la derecha */
+.menu_cajon__lista a:hover {
+  color: var(--gold);
+  padding-left: 8px; /* pequeño desplazamiento hacia la derecha → efecto de "entrada" */
+}
+
+/* El link de la página actual siempre tiene barra dorada a la izquierda y texto dorado */
+/* El JS es quien le agrega la clase "activo" según la URL actual */
+.menu_cajon__lista a.activo {
+  color: var(--gold);
+  border-left: 2px solid var(--gold); /* línea dorada vertical a la izquierda */
+  padding-left: 8px;
+}
+
+/* Dirección/información pequeña al fondo del menú */
+.menu_cajon__direccion {
+  color: rgba(255,255,255,0.35); /* blanco muy tenue (casi invisible) */
+  font-size: 0.78rem;
+  position: absolute;            /* se posiciona respecto al .menu_cajon (que tiene position:fixed) */
+  bottom: 2rem;                  /* pegado al fondo del menú */
+  left: 1.5rem;
+}
+
+/* Botón X para cerrar el menú */
+.btn_cerrar {
+  background: none; /* sin fondo */
+  border: none;     /* sin borde */
+  color: var(--cream);
+  font-size: 1.3rem;
+  cursor: pointer;  /* muestra la manito al pasar el mouse */
+  opacity: 0.6;     /* semitransparente por defecto */
+  transition: opacity 0.2s;
+}
+/* Al pasar el mouse: se vuelve completamente visible */
+.btn_cerrar:hover { opacity: 1; }
+
+
+/* ================================================
+   BARRA SUPERIOR
+   El header que siempre queda fijo arriba,
+   visible sin importar cuánto hagas scroll.
+================================================ */
+.barra_superior {
+  position: fixed;              /* fija, no se mueve con el scroll */
+  top: 0; left: 0; right: 0;   /* pegada al borde superior, ocupa todo el ancho */
+  height: 64px;                 /* altura fija de 64px */
+  background: var(--saddle);    /* fondo marrón */
+  display: flex;                /* pone sus hijos en fila horizontal */
+  align-items: center;          /* los centra verticalmente dentro de los 64px */
+  padding: 0 1.5rem;            /* espacio interno a los lados */
+  gap: 1rem;                    /* espacio entre los elementos hijos */
+  z-index: 5;                   /* encima del contenido normal pero debajo de la capa oscura */
+  border-bottom: 2px solid var(--gold); /* línea dorada decorativa abajo */
+}
+
+/* Nombre/logo en la barra superior */
+.barra_superior__logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  color: var(--cream);
+  letter-spacing: 2px;
+  flex: 1; /* ocupa todo el espacio disponible en el medio
+              (empuja el tag hacia la derecha y el botón hacia la izquierda) */
+}
+
+/* Texto pequeño "VINTAGE · LIMA" a la derecha */
+.barra_superior__tag {
+  font-size: 0.72rem;
+  color: var(--gold);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+/* Botón hamburguesa (las 3 rayitas) */
+.btn_hamburguesa {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;           /* pone las 3 rayitas en columna */
+  flex-direction: column;  /* apila los span verticalmente */
+  gap: 5px;                /* espacio entre cada rayita */
+  padding: 4px;
+}
+
+/* Cada rayita del botón hamburguesa es un <span> */
+.btn_hamburguesa span {
+  display: block;
+  width: 22px; height: 2px;        /* rectangulito finito horizontal */
+  background: var(--cream);
+  border-radius: 2px;              /* bordes ligeramente redondeados */
+  transition: background 0.2s;
+}
+/* Al pasar el mouse: las rayitas se vuelven doradas */
+.btn_hamburguesa:hover span { background: var(--gold); }
+
+
+/* ================================================
+   SLIDER 3D
+   El carrusel de la página de inicio.
+   El efecto 3D se logra con clases CSS:
+   el JS simplemente las agrega/quita según
+   qué diapositiva está activa.
+================================================ */
+
+/* Sección que contiene todo el slider, con padding-top para no quedar detrás del header */
+.seccion_slider {
+  padding-top: 64px;          /* empuja el contenido 64px hacia abajo (mismo alto que el header) */
+  background: var(--saddle);  /* fondo marrón detrás del carrusel */
+}
+
+/* Contenedor externo: define el área visible y el punto de perspectiva para el 3D */
+.carrusel_contenedor {
+  position: relative;                    /* necesario para posicionar hijos con absolute */
+  width: 100%; height: 440px;
+  display: flex;
+  align-items: center; justify-content: center; /* centra el carrusel dentro */
+  perspective: 1000px;                   /* define la "distancia del ojo" para el efecto 3D
+                                            → a mayor número, menos efecto 3D */
+  overflow: hidden;                      /* oculta lo que se salga del contenedor */
+}
+
+/* El carrusel en sí: es el espacio donde las diapositivas se posicionan */
+.carrusel {
+  position: relative;
+  width: 640px; height: 390px;
+  transform-style: preserve-3d; /* le dice al navegador que los hijos viven en espacio 3D */
+}
+
+/* Cada diapositiva base (sin estado aún) */
+.diapositiva {
+  position: absolute; /* se apilan una encima de la otra dentro del carrusel */
+  inset: 0;           /* ocupa todo el espacio del carrusel (top/right/bottom/left: 0) */
+  border-radius: 12px;
+  overflow: hidden;   /* recorta la imagen a los bordes redondeados */
+  transition: transform 0.65s ease, opacity 0.65s ease; /* animación suave al cambiar de estado */
+  border: 2px solid var(--gold); /* borde dorado en cada diapositiva */
+}
+
+/* La imagen dentro de la diapositiva ocupa todo el espacio */
+.diapositiva img {
+  width: 100%; height: 100%;
+  object-fit: cover;  /* recorta/ajusta la imagen para que llene el espacio sin deformarse */
+  display: block;
+  filter: sepia(20%); /* leve tono sepia para estética vintage */
+}
+
+/* Texto/etiqueta en la parte inferior de cada diapositiva */
+.diapositiva__texto {
+  position: absolute; /* se superpone sobre la imagen */
+  bottom: 0; left: 0; right: 0;
+  padding: 1.2rem 1.5rem;
+  /* degradado de transparente a marrón oscuro: hace legible el texto sobre la imagen */
+  background: linear-gradient(transparent, rgba(42,26,14,0.85));
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  color: var(--cream);
+  letter-spacing: 2px;
+}
+
+/* ── Estados de las diapositivas ── */
+/* El JS agrega una de estas clases a cada diapositiva según su posición */
+
+/* Diapositiva central: se ve grande, nítida, al frente */
+.diapositiva.activa {
+  transform: translateX(0) scale(1); /* posición original, tamaño normal */
+  opacity: 1;
+  z-index: 3; /* encima de las laterales */
+}
+
+/* Diapositiva de la izquierda: desplazada, más pequeña, girada, semitransparente */
+.diapositiva.anterior {
+  transform: translateX(-500px) scale(0.72) rotateY(28deg);
+  /* translateX(-500px) → movida 500px a la izquierda          */
+  /* scale(0.72)        → reducida al 72% de su tamaño          */
+  /* rotateY(28deg)     → girada en el eje Y → efecto 3D        */
+  opacity: 0.5;
+  z-index: 2;
+}
+
+/* Diapositiva de la derecha: igual pero al lado opuesto */
+.diapositiva.siguiente {
+  transform: translateX(500px) scale(0.72) rotateY(-28deg);
+  opacity: 0.5;
+  z-index: 2;
+}
+
+/* Las demás diapositivas (ni activa ni laterales): completamente ocultas */
+.diapositiva.oculta {
+  opacity: 0;
+  z-index: 1; /* detrás de todo */
+}
+
+/* Botones de flecha izquierda y derecha */
+.btn_anterior, .btn_siguiente {
+  position: absolute;
+  top: 50%; transform: translateY(-50%); /* centrados verticalmente */
+  z-index: 10;
+  background: rgba(218,165,32,0.15); /* dorado muy tenue */
+  border: 1px solid var(--gold);
+  color: var(--cream);
+  font-size: 1.2rem;
+  width: 42px; height: 42px;
+  border-radius: 50%; /* forma circular */
+  cursor: pointer;
+  transition: background 0.3s;
+}
+/* Al pasar el mouse: fondo dorado sólido */
+.btn_anterior:hover, .btn_siguiente:hover {
+  background: var(--gold);
+  color: var(--darkbrown);
+}
+.btn_anterior { left: 1rem; }   /* flecha izquierda: pegada al borde izquierdo */
+.btn_siguiente { right: 1rem; } /* flecha derecha: pegada al borde derecho */
+
+/* Contenedor de los puntitos de navegación (uno por diapositiva) */
+.puntos {
+  position: absolute;
+  bottom: 14px; /* pegados al fondo del carrusel */
+  display: flex; gap: 8px; /* en fila con espaciado */
+  z-index: 10;
+}
+
+/* Cada puntito individual */
+.punto {
+  width: 8px; height: 8px;
+  border-radius: 50%;                     /* forma circular */
+  background: rgba(255,240,200,0.3);      /* crema muy tenue (inactivo) */
+  cursor: pointer;
+  transition: background 0.3s, transform 0.3s;
+}
+
+/* El puntito de la diapositiva activa: dorado y más grande */
+.punto.activo {
+  background: var(--gold);
+  transform: scale(1.4); /* 40% más grande que los demás */
+}
+
+
+/* ================================================
+   FOOTER
+   La barra inferior de la página.
+================================================ */
+.pie_pagina {
+  background: var(--darkbrown);              /* fondo marrón muy oscuro */
+  color: rgba(245,239,230,0.45);             /* texto crema muy tenue */
+  text-align: center;
+  padding: 1.5rem;
+  font-size: 0.82rem;
+  letter-spacing: 1px;
+  border-top: 2px solid var(--gold);         /* línea dorada decorativa arriba */
+}
+
+/* Links dentro del footer: color dorado */
+.pie_pagina a { color: var(--gold); }
+
+/* Al pasar el mouse sobre un link del footer: se vuelve crema */
+.pie_pagina a:hover { color: var(--cream); }

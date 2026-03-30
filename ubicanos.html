@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La Tienduca de LBP — Ubícanos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+
+  <div class="capa_oscura" id="capa_oscura"></div>
+
+  <nav class="menu_cajon" id="menu_cajon">
+    <button class="btn_cerrar" id="btn_cerrar">✕</button>
+    <div class="menu_cajon__logo">LBP</div>
+    <ul class="menu_cajon__lista">
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="varones.html">Hombres</a></li>
+      <li><a href="mujeres.html">Mujeres</a></li>
+      <li><a href="promociones.html">Promociones</a></li>
+      <li><a href="ubicanos.html">Ubícanos</a></li>
+    </ul>
+    <p class="menu_cajon__direccion">📍 Lima, Perú</p>
+  </nav>
+
+  <header class="barra_superior">
+    <button class="btn_hamburguesa" id="btn_abrir"><span></span><span></span><span></span></button>
+    <div class="barra_superior__logo">La Tienduca de LBP</div>
+    <span class="barra_superior__tag">Vintage · Lima</span>
+  </header>
+
+  <div class="hero_banner">
+    <h1 class="hero_banner__titulo">Ubícanos</h1>
+    <p class="hero_banner__subtitulo">Visítanos en Lima · Siempre hay algo nuevo</p>
+    <div class="hero_banner__linea"></div>
+  </div>
+
+  <!-- MAPA + INFO DE CONTACTO -->
+  <section class="seccion_ubicanos">
+    <div class="container">
+      <h2 class="titulo_seccion">¿Dónde estamos?</h2>
+
+      <!-- Bootstrap: mapa a la izquierda, info a la derecha -->
+      <div class="row g-4 align-items-stretch mb-5">
+
+        <!-- Mapa de Google (Lima, Perú) -->
+        <div class="col-12 col-md-7">
+          <div class="mapa_contenedor">
+            <!--
+              Este es un iframe de Google Maps.
+              Para usar tu dirección real:
+              1. Ve a maps.google.com
+              2. Busca tu dirección
+              3. Click en "Compartir" > "Insertar mapa"
+              4. Copia el código iframe y reemplaza este
+            -->
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3901.0!2d-77.0428!3d-12.0464!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTLCsDAyJzQ3LjAiUyA3N8KwMDInMzQuMSJX!5e0!3m2!1ses!2spe!4v1234567890"
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+          </div>
+        </div>
+
+        <!-- Info de contacto -->
+        <div class="col-12 col-md-5">
+          <div class="info_contacto">
+
+            <div class="info_contacto__item">
+              <span class="info_contacto__icono">📍</span>
+              <div class="info_contacto__texto">
+                <p>Dirección</p>
+                <span>Jr. de la Unión 450, Lima Centro</span>
+              </div>
+            </div>
+
+            <div class="info_contacto__item">
+              <span class="info_contacto__icono">📱</span>
+              <div class="info_contacto__texto">
+                <p>WhatsApp / Llamadas</p>
+                <span>+51 999 888 777</span>
+              </div>
+            </div>
+
+            <div class="info_contacto__item">
+              <span class="info_contacto__icono">📧</span>
+              <div class="info_contacto__texto">
+                <p>Correo</p>
+                <span>lbp@tienduca.pe</span>
+              </div>
+            </div>
+
+            <div class="info_contacto__item">
+              <span class="info_contacto__icono">🕐</span>
+              <div class="info_contacto__texto">
+                <p>Horario de atención</p>
+                <span>Lunes a Sábado · 10am – 7pm</span>
+              </div>
+            </div>
+
+            <div class="info_contacto__item">
+              <span class="info_contacto__icono">🚇</span>
+              <div class="info_contacto__texto">
+                <p>Cómo llegar</p>
+                <span>Metro Línea 1 — Est. La Cultura · 5 min caminando</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div><!-- fin row mapa -->
+
+
+      <!-- REDES SOCIALES -->
+      <h3 class="redes_titulo">Síguenos</h3>
+
+      <!-- Bootstrap: 2 columnas en móvil y desktop -->
+      <div class="redes_grid">
+
+        <a href="https://wa.me/51999888777" target="_blank" class="red_social red_whatsapp">
+          <span class="red_social__icono">💬</span>
+          WhatsApp
+        </a>
+
+        <a href="https://instagram.com/latienduca_lbp" target="_blank" class="red_social red_instagram">
+          <span class="red_social__icono">📸</span>
+          Instagram
+        </a>
+
+        <a href="https://facebook.com/latienduca" target="_blank" class="red_social red_facebook">
+          <span class="red_social__icono">👍</span>
+          Facebook
+        </a>
+
+        <a href="https://tiktok.com/@latienduca" target="_blank" class="red_social red_tiktok">
+          <span class="red_social__icono">🎵</span>
+          TikTok
+        </a>
+
+      </div>
+
+    </div>
+  </section>
+
+  <footer class="pie_pagina">
+    <p>© 2026 La Tienduca de LBP · Lima, Perú ·
+      <a href="index.html">Inicio</a> ·
+      <a href="promociones.html">Promociones</a>
+    </p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
