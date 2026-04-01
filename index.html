@@ -1,91 +1,19 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-
   <meta charset="UTF-8">
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>La Tienducha — Inicio</title>
-
-  <!-- ══════════════════════════════════════════════════
-       📦 BOOTSTRAP 5 — CSS
-       ══════════════════════════════════════════════════
-       Bootstrap es una librería (colección de estilos ya hechos) que nos da
-       herramientas para construir páginas más rápido.
-
-       ¿QUÉ NOS DA BOOTSTRAP?
-       ─────────────────────
-       1. GRID (sistema de columnas):
-          Divide la página en 12 columnas invisibles.
-          Con clases como col-6 (mitad), col-4 (un tercio), col-12 (completo)
-          armamos layouts que se adaptan a cualquier pantalla automáticamente.
-          Ejemplo:
-            <div class="row">
-              <div class="col-6">Mitad izquierda</div>
-              <div class="col-6">Mitad derecha</div>
-            </div>
-
-       2. UTILIDADES de espaciado, texto, colores, etc.:
-          Clases listas para usar sin escribir CSS:
-          · mt-3      → margin-top (espacio arriba)
-          · p-4       → padding en todos lados
-          · text-center → texto centrado
-          · d-flex    → display: flex
-          · container → centra el contenido con márgenes automáticos
-
-       3. COMPONENTES ya diseñados (cards, modales, alerts, etc.)
-          — aunque en este proyecto usamos los nuestros propios.
-
-       ¿CÓMO FUNCIONA?
-       ───────────────
-       Solo hay que agregar clases de Bootstrap a los elementos HTML.
-       Bootstrap ya tiene el CSS escrito; nosotros solo usamos sus nombres de clase.
-       Nuestro estilo.css va DESPUÉS de Bootstrap para poder sobreescribir lo que necesitemos.
-
-       ══════════════════════════════════════════════════ -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- cdn.jsdelivr.net → servidor externo que entrega el archivo CSS de Bootstrap.
-       No necesitamos descargar nada, el navegador lo busca directamente ahí.
-       (Requiere conexión a internet para funcionar) -->
-
-
   <link rel="stylesheet" href="estilo.css">
-  <!-- Nuestro CSS propio. Va SIEMPRE DESPUÉS de Bootstrap para que nuestros
-       estilos tengan prioridad y puedan sobreescribir los de Bootstrap si hace falta. -->
-
 </head>
-
 <body>
-  <!-- Todo lo que el usuario VE en pantalla va dentro del <body>. -->
 
-
-  <!-- CAPA OSCURA ─────────────────────────────────────────────
-       Un div vacío. No muestra nada por sí solo.
-       El CSS lo convierte en una capa negra semitransparente que cubre toda la pantalla.
-       El JS le agrega/quita la clase "visible" para mostrarla u ocultarla.
-       id="capa_oscura" → el JS lo busca por este nombre para controlarlo. -->
   <div class="capa_oscura" id="capa_oscura"></div>
 
-
-  <!-- MENÚ CAJÓN ──────────────────────────────────────────────
-       <nav> es una etiqueta semántica: le dice al navegador y a Google
-       que este bloque es un menú de navegación (no un div cualquiera).
-       Empieza oculto fuera de pantalla (el CSS lo posiciona a la izquierda fuera de vista).
-       El JS le agrega la clase "abierto" para que entre deslizándose. -->
   <nav class="menu_cajon" id="menu_cajon">
-
-    <!-- Botón X para cerrar el menú.
-         id="btn_cerrar" → el JS lo escucha para cerrar el menú al hacer clic. -->
     <button class="btn_cerrar" id="btn_cerrar">✕</button>
-
-    <!-- Logo dentro del menú -->
     <div class="menu_cajon__logo">LBP</div>
-
-    <!-- Lista de links de navegación.
-         <ul> = lista sin orden (unordered list)
-         <li> = cada elemento de la lista (list item)
-         <a href="..."> = link que lleva a otra página -->
     <ul class="menu_cajon__lista">
       <li><a href="index.html">Inicio</a></li>
       <li><a href="varones.html">Hombres</a></li>
@@ -94,72 +22,36 @@
       <li><a href="ubicanos.html">Ubícanos</a></li>
       <li><a href="contacto.html">Contacto</a></li>
     </ul>
-    <!-- El JS recorre estos links, compara el href con la URL actual
-         y le agrega la clase "activo" al que corresponde a la página donde estás. -->
-
-    <!-- Texto pequeño al fondo del menú -->
     <p class="menu_cajon__direccion">📍 Lima, Perú</p>
-
   </nav>
 
-
-  <!-- BARRA SUPERIOR (HEADER) ─────────────────────────────────
-       <header> es semántico: indica que este bloque es la cabecera de la página.
-       El CSS lo fija arriba con position:fixed para que siempre sea visible. -->
   <header class="barra_superior">
-
-    <!-- Botón hamburguesa (las 3 rayitas).
-         Contiene 3 <span> vacíos que el CSS convierte en rayitas horizontales.
-         id="btn_abrir" → el JS lo escucha para abrir el menú al hacer clic. -->
-
     <button class="btn_hamburguesa" id="btn_abrir">
       <span></span>
       <span></span>
       <span></span>
     </button>
-
-    <!-- Nombre de la tienda en la barra -->
-    <div class="barra_superior__logo">  <img src="logo1.jpg" alt="La Tienducha" class="barra_superior__logo" style="height: 44px; width: auto;">
-</div>
-
-    <!-- Texto decorativo a la derecha -->
+    <div class="barra_superior__logo">
+      <img src="logo1.jpg" alt="La Tienducha" style="height: 44px; width: auto;">
+    </div>
     <span class="barra_superior__tag">Vintage · Lima</span>
-
   </header>
 
-
-  <!-- SLIDER PRINCIPAL ────────────────────────────────────────
-       <section> es semántico: agrupa un bloque temático de la página.
-       Aquí está todo el carrusel de imágenes. -->
   <section class="seccion_slider">
-
     <div class="carrusel_contenedor">
-      <!-- Flecha izquierda. &#8592; es el código HTML para el símbolo ← -->
       <button class="btn_anterior">&#8592;</button>
-
-      <!-- Contenedor de las diapositivas.
-           El JS mueve las clases (activa / anterior / siguiente / oculta)
-           entre estos divs para crear el efecto de carrusel. -->
       <div class="carrusel">
 
-        <!-- DIAPOSITIVA 1: simple, solo imagen y texto -->
         <div class="diapositiva">
           <img src="header1.jpg" alt="Colección vintage">
-          <!-- alt="..." → texto alternativo: aparece si la imagen no carga
-               y es lo que leen los lectores de pantalla para personas con discapacidad visual -->
           <div class="diapositiva__texto">Nueva Colección</div>
         </div>
 
-        <!-- DIAPOSITIVA 2: tiene un link, al hacer clic va a Promociones.
-             style="cursor:pointer" → muestra la manito al pasar el mouse.
-             onclick="location.href='...'" → redirige a esa página al hacer clic.
-             Nota: esto está puesto directo en el HTML como atajo rápido. -->
         <div class="diapositiva" style="cursor:pointer" onclick="location.href='promociones.html'">
           <img src="header2.jpg" alt="Promociones">
           <div class="diapositiva__texto">🔥 Promociones de la semana →</div>
         </div>
 
-        <!-- DIAPOSITIVAS 3, 4, 5, 6: misma estructura, distintas imágenes -->
         <div class="diapositiva">
           <img src="header3.jpg" alt="Moda retro">
           <div class="diapositiva__texto">Segunda Mano · Primera Clase</div>
@@ -181,24 +73,11 @@
         </div>
 
       </div>
-      <!-- Fin .carrusel -->
-
-      <!-- Flecha derecha. &#8594; es el símbolo → -->
       <button class="btn_siguiente">&#8594;</button>
-
-      <!-- Contenedor de puntitos de navegación.
-           Empieza VACÍO a propósito.
-           El JS crea un puntito por cada diapositiva y los inserta aquí dinámicamente. -->
       <div class="puntos"></div>
-
     </div>
-    <!-- Fin .carrusel_contenedor -->
-
   </section>
 
-
-  <!-- FOOTER ──────────────────────────────────────────────────
-       <footer> es semántico: indica que este bloque es el pie de página. -->
   <footer class="pie_pagina">
     <p>© 2026 La Tienduca de LBP · Lima, Perú ·
       <a href="ubicanos.html">Ubícanos</a> ·
@@ -206,20 +85,7 @@
     </p>
   </footer>
 
-
-<!-- BOOTSTRAP 5 — JavaScript  Bootstrap también tiene su propio JS para componentes 
-  1. El HTML ya cargó, así que el JS puede encontrar los elementos sin problema.
-  2. La página se ve más rápido (no espera a que cargue el JS para mostrar contenido). "bundle" incluye Popper.js adentro (necesario para algunos componentes de Bootstrap).
-       -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-  <!-- Nuestro JS propio. Va DESPUÉS de Bootstrap por si necesitáramos usar algo de él.
-       También va al final para que cuando se ejecute, todos los elementos del HTML
-       ya existan en la página y el JS pueda encontrarlos con getElementById, etc. -->
   <script src="app.js"></script>
-
 </body>
-<!-- Fin del contenido visible -->
-
 </html>
-<!-- Fin del documento HTML -->
