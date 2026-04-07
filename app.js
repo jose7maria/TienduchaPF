@@ -1,317 +1,554 @@
-// ================================================
-// MENÚ CAJÓN — funciona igual en todas las páginas
-// ================================================
+/* ============================================================
+   ARCHIVO: app.js
+   QUÉ HACE: toda la interactividad de la web
+   CÓMO SE USA: todas las páginas lo llaman con:
+   <script src="app.js"></script>
+   
+   IMPORTANTE: cada bloque tiene comentario de inicio y fin.
+   Si algo no funciona en una página, el bloque dice
+   "solo se ejecuta si existe el elemento".
+============================================================ */
 
-// "getElementById" busca en el HTML un elemento que tenga ese id="..."
-// y lo guarda en una variable para poder usarlo después.
-// Es como decir: "quiero tener a mano este elemento del HTML"
+
+/* ============================================================
+   MENÚ CAJÓN — desde aquí
+   Abre y cierra el panel lateral de navegación.
+   Funciona en TODAS las páginas.
+============================================================ */
+
+// Buscamos los elementos en el HTML por su id
+// getElementById busca el elemento que tenga id="ese-nombre"
 const menu_cajon  = document.getElementById('menu_cajon');
 const capa_oscura = document.getElementById('capa_oscura');
 const btn_abrir   = document.getElementById('btn_abrir');
 const btn_cerrar  = document.getElementById('btn_cerrar');
 
-// Una "función" es un bloque de instrucciones con nombre.
-// Se define una vez y se puede usar (llamar) varias veces.
-
+// Función para ABRIR el menú:
+// Agrega la clase .abierto al nav → CSS lo desliza adentro
+// Agrega la clase .visible al overlay → CSS lo hace visible
 function abrirMenu() {
-  // classList.add('abierto') → le AGREGA la clase CSS "abierto" al elemento.
-  // Eso hace que el CSS lo detecte y aplique los estilos de .menu_cajon.abierto
-  // (que lo hace deslizarse hacia adentro).
   menu_cajon.classList.add('abierto');
-  // También mostramos la capa oscura de fondo
   capa_oscura.classList.add('visible');
 }
 
+// Función para CERRAR el menú:
+// Quita las clases → CSS los anima de vuelta
 function cerrarMenu() {
-  // classList.remove('abierto') → le QUITA la clase CSS.
-  // El menú vuelve a estar fuera de pantalla (vuelve a estar oculto).
   menu_cajon.classList.remove('abierto');
   capa_oscura.classList.remove('visible');
 }
 
-// addEventListener('click', función) → "escucha" cuando el usuario hace clic.
-// Cuando el botón hamburguesa recibe un clic → llama a abrirMenu()
+// addEventListener escucha el evento 'click' en cada elemento
 btn_abrir.addEventListener('click', abrirMenu);
-
-// Cuando el botón X recibe un clic → llama a cerrarMenu()
 btn_cerrar.addEventListener('click', cerrarMenu);
-
-// Si el usuario hace clic en la capa oscura (el fondo) → también cierra el menú
 capa_oscura.addEventListener('click', cerrarMenu);
+// Click en la capa oscura (fuera del menú) también cierra
 
-// querySelectorAll devuelve TODOS los elementos que coincidan con ese selector CSS.
-// Aquí selecciona todos los links del menú lateral.
-// .forEach recorre cada uno y le aplica lo que está dentro de la función.
+// Cierra el menú al hacer click en cualquier link
 document.querySelectorAll('.menu_cajon__lista a').forEach(link => {
-  // Cada link del menú: cuando se haga clic, cerrar el menú
-  // (útil en móvil para que el menú no quede abierto al navegar)
+  // querySelectorAll busca TODOS los elementos con ese selector
+  // forEach recorre cada uno y hace lo mismo
   link.addEventListener('click', cerrarMenu);
 });
 
-
-// ── Marcar el link activo según la página actual ──────────────────────────────
-
-// window.location.pathname devuelve la ruta de la URL actual.
-// Ejemplo: si estás en "misitio.com/varones.html" → devuelve "/varones.html"
-// .split('/') la divide por las barras → ["", "varones.html"]
-// .pop() toma el último elemento → "varones.html"
-// Si está vacío (página raíz), usamos 'index.html' como valor por defecto.
+// Marca el link activo según la página donde estás
+// window.location.pathname = ruta de la URL actual
+// .split('/').pop() = extrae solo el nombre del archivo
 const pagina_actual = window.location.pathname.split('/').pop() || 'index.html';
-
 document.querySelectorAll('.menu_cajon__lista a').forEach(link => {
-  // getAttribute('href') lee el valor del atributo href de ese link
-  // Ejemplo: <a href="varones.html"> → devuelve "varones.html"
-  const href = link.getAttribute('href');
-
-  // Si el href del link coincide con la página actual → le agrega la clase "activo"
-  // Eso hace que el CSS lo muestre con color dorado y una línea a la izquierda
-  if (href === pagina_actual) link.classList.add('activo');
+  if (link.getAttribute('href') === pagina_actual) {
+    link.classList.add('activo');
+    // Si el href del link coincide con la página actual,
+    // agrega la clase .activo → CSS lo pone dorado
+  }
 });
 
+/* MENÚ CAJÓN — termina aquí */
 
-// ================================================
-// SLIDER 3D — solo se ejecuta si hay slider en la página
-// ================================================
 
-// Busca TODOS los elementos con clase "diapositiva" en la página
+/* ============================================================
+   FOOTER DINÁMICO — desde aquí
+   En lugar de escribir el footer en cada página HTML,
+   lo generamos una sola vez con JS.
+   Si necesitas cambiar algo (teléfono, dirección, etc.)
+   solo lo cambias aquí y se actualiza en todas las páginas.
+============================================================ */
+
+// Buscamos el elemento <footer id="pie_pagina"> en el HTML
+const pie = document.getElementById('pie_pagina');
+
+// Si existe en esta página, lo llenamos con el HTML del footer
+if (pie) {
+  pie.innerHTML = `
+    <div class="pie_pagina__grid">
+
+      <!-- Columna 1: descripción de la tienda -->
+      <div class="pie_pagina__col">
+        <span class="pie_pagina__col_titulo">La Tienduca de LBP</span>
+        <p>Ropa vintage y de segunda mano para hombres y mujeres.</p>
+        <p>Lima, Perú · Desde 2020</p>
+      </div>
+
+      <!-- Columna 2: links de navegación -->
+      <div class="pie_pagina__col">
+        <span class="pie_pagina__col_titulo">Páginas</span>
+        <a href="index.html">Inicio</a>
+        <a href="varones.html">Hombres</a>
+        <a href="mujeres.html">Mujeres</a>
+        <a href="promociones.html">Promociones</a>
+        <a href="ubicanos.html">Ubícanos</a>
+        <a href="contacto.html">Contacto</a>
+      </div>
+
+      <!-- Columna 3: datos de contacto -->
+      <div class="pie_pagina__col">
+        <span class="pie_pagina__col_titulo">Contacto</span>
+        <p>📍 Jr. de la Unión 450, Lima</p>
+        <p>📱 +51 999 888 777</p>
+        <p>📧 lbp@tienduca.pe</p>
+        <p>🕐 Lun–Sáb · 10am – 7pm</p>
+      </div>
+
+      <!-- Columna 4: redes sociales con íconos -->
+      <div class="pie_pagina__col">
+        <span class="pie_pagina__col_titulo">Síguenos</span>
+        <div class="pie_pagina__redes">
+          <a href="https://wa.me/51999888777" target="_blank" class="pie_pagina__red wa">
+            💬 WhatsApp
+          </a>
+          <a href="https://instagram.com/latienduca_lbp" target="_blank" class="pie_pagina__red ig">
+            📸 Instagram
+          </a>
+          <a href="https://facebook.com/latienduca" target="_blank" class="pie_pagina__red fb">
+            👍 Facebook
+          </a>
+          
+        </div>
+      </div>
+
+    </div>
+    <p class="pie_pagina__copy">© 2026 La Tienduca de LBP · Lima, Perú · Todos los derechos reservados</p>
+  `;
+}
+
+/* FOOTER DINÁMICO — termina aquí */
+
+
+/* ============================================================
+   SLIDER 3D — desde aquí
+   Solo funciona en index.html donde existen .diapositiva.
+   La lógica: guardamos en 'actual' el índice del slide activo.
+   Cada vez que avanzamos, actualizarSlider() recorre todos
+   los slides y les asigna su clase: activa/anterior/siguiente/oculta.
+   CSS hace la animación automáticamente.
+============================================================ */
+
+// Buscamos todas las diapositivas en la página
 const diapositivas = document.querySelectorAll('.diapositiva');
 
-// Si diapositivas.length > 0 significa que hay al menos una diapositiva en la página.
-// Si no hay ninguna (ej: en varones.html no hay slider), todo este bloque se saltea.
+// Solo ejecutamos si existen diapositivas en esta página
 if (diapositivas.length > 0) {
 
-  // Busca el contenedor donde van a aparecer los puntitos de navegación
   const contenedor_puntos = document.querySelector('.puntos');
+  const total = diapositivas.length; // cuántas diapositivas hay
+  let actual  = 0; // índice del slide activo (empieza en 0)
 
-  // total = cuántas diapositivas hay en total
-  const total = diapositivas.length;
-
-  // actual = índice de la diapositiva que se está mostrando ahora
-  // Los índices empiezan en 0 (la primera es 0, la segunda es 1, etc.)
-  let actual = 0;
-
-  // Crea un puntito por cada diapositiva y lo agrega al HTML dinámicamente
+  // Creamos los puntitos dinámicamente según cuántos slides haya
+  // En lugar de escribirlos en el HTML, JS los crea aquí
   diapositivas.forEach((_, i) => {
-    // Crea un nuevo elemento <div> en memoria (aún no está en la página)
     const punto = document.createElement('div');
-
-    // Le agrega la clase CSS "punto" para que se vea como un círculo
+    // createElement('div') crea un nuevo elemento HTML
     punto.classList.add('punto');
-
-    // El primer puntito (i === 0) empieza como activo (más grande y dorado)
-    if (i === 0) punto.classList.add('activo');
-
-    // Al hacer clic en un puntito → ir directamente a esa diapositiva
-    punto.addEventListener('click', () => irA(i));
-
-    // Agrega el puntito al contenedor en el HTML real
+    if (i === 0) punto.classList.add('activo'); // el primero activo
+    punto.addEventListener('click', () => irA(i)); // click = ir a ese slide
     contenedor_puntos.appendChild(punto);
+    // appendChild agrega el nuevo punto al contenedor
   });
 
-
+  // Función principal: asigna una clase a cada slide según su posición
   function actualizarSlider() {
-    // Recorre cada diapositiva y le asigna la clase que le corresponde
     diapositivas.forEach((diap, i) => {
-
-      // Primero borra todas las clases y deja solo "diapositiva" (la clase base)
-      diap.className = 'diapositiva';
+      diap.className = 'diapositiva'; // limpia todas las clases previas
 
       if (i === actual) {
-        // Esta es la diapositiva del centro → se ve grande y nítida
-        diap.classList.add('activa');
-      }
-      else if (i === (actual - 1 + total) % total) {
-        // Esta es la diapositiva a la IZQUIERDA de la actual
-        // El % total es para que cuando estás en la primera, el "anterior" sea la última
-        // Ejemplo: actual=0, total=5 → (0 - 1 + 5) % 5 = 4 → última diapositiva
+        diap.classList.add('activa');  // este es el slide del centro
+
+      } else if (i === (actual - 1 + total) % total) {
         diap.classList.add('anterior');
-      }
-      else if (i === (actual + 1) % total) {
-        // Esta es la diapositiva a la DERECHA de la actual
-        // Ejemplo: actual=4, total=5 → (4 + 1) % 5 = 0 → vuelve a la primera
+        // (actual - 1 + total) % total evita números negativos.
+        // Ejemplo: si actual=0, queremos el ÚLTIMO a la izquierda.
+        // 0 - 1 = -1 (inválido), pero (-1 + 3) % 3 = 2 ✓
+
+      } else if (i === (actual + 1) % total) {
         diap.classList.add('siguiente');
-      }
-      else {
-        // Las demás diapositivas están ocultas (ni se ven)
-        diap.classList.add('oculta');
+        // % total = vuelve al 0 cuando llega al final.
+        // Ejemplo: si total=3 y actual=2: (2+1)%3 = 0 ✓
+
+      } else {
+        diap.classList.add('oculta'); // los demás, invisibles
       }
     });
 
-    // Actualiza también los puntitos: solo el del índice actual queda dorado
-    document.querySelectorAll('.punto').forEach((p, i) =>
-      // classList.toggle('activo', condición):
-      // Si condición es true → agrega 'activo'; si es false → la quita
-      p.classList.toggle('activo', i === actual)
-    );
+    // Actualiza los puntitos: solo el activo tiene la clase .activo
+    document.querySelectorAll('.punto').forEach((p, i) => {
+      p.classList.toggle('activo', i === actual);
+      // toggle(clase, condicion): agrega si true, quita si false
+    });
   }
 
-
-  // Cambia a una diapositiva específica por su índice
+  // Función para ir a un slide específico por su número
   function irA(indice) {
-    actual = indice;       // actualiza cuál es la actual
-    actualizarSlider();    // redibuja el slider con las nuevas clases
+    actual = indice;
+    actualizarSlider();
   }
 
-  // Botón "siguiente" (flecha derecha):
-  // (actual + 1) % total → avanza 1, y si llega al final vuelve al principio
-  document.querySelector('.btn_siguiente').addEventListener('click', () =>
-    irA((actual + 1) % total)
-  );
+  // Botones siguiente y anterior
+  document.querySelector('.btn_siguiente').addEventListener('click', () => {
+    irA((actual + 1) % total); // siguiente, vuelve a 0 si es el último
+  });
+  document.querySelector('.btn_anterior').addEventListener('click', () => {
+    irA((actual - 1 + total) % total); // anterior, va al último si está en 0
+  });
 
-  // Botón "anterior" (flecha izquierda):
-  // (actual - 1 + total) % total → retrocede 1, y si está en 0 va al último
-  document.querySelector('.btn_anterior').addEventListener('click', () =>
-    irA((actual - 1 + total) % total)
-  );
-
-  // setInterval(función, milisegundos) → ejecuta la función cada X milisegundos.
-  // 4000 ms = 4 segundos. Aquí avanza automáticamente al siguiente cada 4 segundos.
+  // Autoplay: avanza solo cada 4 segundos
   let autoplay = setInterval(() => irA((actual + 1) % total), 4000);
+  // setInterval ejecuta una función cada X milisegundos
 
+  // Pausa el autoplay al pasar el mouse sobre el slider
   const cc = document.querySelector('.carrusel_contenedor');
-
-  // Cuando el mouse ENTRA al carrusel → pausa el autoplay para que el usuario pueda ver
   cc.addEventListener('mouseenter', () => clearInterval(autoplay));
-
-  // Cuando el mouse SALE del carrusel → reinicia el autoplay
+  // clearInterval detiene el intervalo
   cc.addEventListener('mouseleave', () => {
     autoplay = setInterval(() => irA((actual + 1) % total), 4000);
+    // al salir, reinicia el autoplay
   });
 
-  // Ejecuta una primera vez para que el slider empiece con las clases correctas
-  actualizarSlider();
+  actualizarSlider(); // inicializa el slider al cargar la página
+}
+
+/* SLIDER 3D — termina aquí */
+
+
+/* ============================================================
+   CARRITO VISUAL — desde aquí
+   Muestra los productos que el usuario agrega.
+   Es solo visual, no procesa pagos reales.
+   Al terminar, muestra un link de WhatsApp con el pedido.
+============================================================ */
+
+// Array donde guardamos los productos del carrito
+// Un array es una lista: [item1, item2, item3]
+let carrito = [];
+
+// ---- Crear el botón flotante del carrito ----
+// Lo creamos con JS para que aparezca en TODAS las páginas
+const btn_carrito = document.createElement('button');
+btn_carrito.className = 'btn_carrito_flotante';
+btn_carrito.innerHTML = `
+  🛍
+  <span class="carrito_contador oculto" id="carrito_contador">0</span>
+`;
+document.body.appendChild(btn_carrito);
+
+// ---- Crear el panel lateral del carrito ----
+const panel = document.createElement('div');
+panel.className = 'panel_carrito';
+panel.id = 'panel_carrito';
+panel.innerHTML = `
+  <div class="panel_carrito__header">
+    <span class="panel_carrito__titulo">Mi Carrito</span>
+    <button class="btn_cerrar_carrito" id="btn_cerrar_carrito">✕</button>
+  </div>
+  <div class="panel_carrito__lista" id="lista_carrito">
+    <p class="carrito_vacio" id="carrito_vacio">Tu carrito está vacío</p>
+  </div>
+  <div class="panel_carrito__footer" id="footer_carrito" style="display:none">
+    <div class="panel_carrito__total">
+      <span>Total:</span>
+      <span id="carrito_total">S/ 0</span>
+    </div>
+    <a class="btn_whatsapp_pedido" id="btn_whatsapp_pedido" href="#" target="_blank">
+      💬 Pedir por WhatsApp
+    </a>
+  </div>
+`;
+document.body.appendChild(panel);
+
+// ---- Crear el toast de confirmación ----
+// Toast = pequeña notificación que aparece y desaparece
+const toast = document.createElement('div');
+toast.className = 'toast_carrito';
+toast.id = 'toast_carrito';
+toast.textContent = '✦ Prenda agregada al carrito';
+document.body.appendChild(toast);
+
+// ---- Abrir y cerrar el panel carrito ----
+btn_carrito.addEventListener('click', () => {
+  panel.classList.toggle('abierto');
+  // toggle = si tiene la clase la quita, si no la tiene la agrega
+});
+document.getElementById('btn_cerrar_carrito').addEventListener('click', () => {
+  panel.classList.remove('abierto');
+});
+
+// ---- Función para actualizar lo que se ve en el carrito ----
+function actualizarCarrito() {
+  const lista = document.getElementById('lista_carrito');
+  const vacio = document.getElementById('carrito_vacio');
+  const footer_carrito = document.getElementById('footer_carrito');
+  const contador = document.getElementById('carrito_contador');
+  const total_el = document.getElementById('carrito_total');
+  const btn_wa   = document.getElementById('btn_whatsapp_pedido');
+
+  if (carrito.length === 0) {
+    // Carrito vacío: muestra mensaje, oculta footer y contador
+    vacio.style.display = 'block';
+    footer_carrito.style.display = 'none';
+    contador.classList.add('oculto');
+    return; // sale de la función
+  }
+
+  // Carrito con productos: oculta mensaje, muestra footer y contador
+  vacio.style.display = 'none';
+  footer_carrito.style.display = 'block';
+  contador.classList.remove('oculto');
+  contador.textContent = carrito.length; // número de productos
+
+  // Limpiar y redibujar los items del carrito
+  // Primero quitamos todo excepto el mensaje de vacío
+  const items_anteriores = lista.querySelectorAll('.carrito_item');
+  items_anteriores.forEach(item => item.remove());
+
+  // Calculamos el total sumando los precios
+  let total = 0;
+
+  // Recorremos cada producto del carrito y creamos su HTML
+  carrito.forEach((producto, index) => {
+    // Extraer el número del precio (ej: "S/ 85" → 85)
+    const precio_num = parseInt(producto.precio.replace(/\D/g, '')) || 0;
+    // replace(/\D/g, '') = quita todos los caracteres que no son números
+    // parseInt = convierte el texto "85" al número 85
+    total += precio_num;
+
+    const item_el = document.createElement('div');
+    item_el.className = 'carrito_item';
+    item_el.innerHTML = `
+      <div class="carrito_item__foto">
+        <img src="${producto.img}" alt="${producto.nombre}">
+      </div>
+      <div class="carrito_item__info">
+        <p class="carrito_item__nombre">${producto.nombre}</p>
+        <p class="carrito_item__talla">Talla: ${producto.talla}</p>
+        <p class="carrito_item__precio">${producto.precio}</p>
+      </div>
+      <button class="carrito_item__quitar" data-index="${index}">✕</button>
+    `;
+    lista.appendChild(item_el); // agrega el item al panel
+  });
+
+  // Mostrar el total
+  total_el.textContent = 'S/ ' + total;
+
+  // Armar el mensaje de WhatsApp con todos los productos
+  // encodeURIComponent convierte el texto para que funcione en una URL
+  const mensaje = 'Hola, quiero consultar sobre estas prendas:\n' +
+    carrito.map((p, i) => `${i + 1}. ${p.nombre} - Talla ${p.talla} - ${p.precio}`).join('\n');
+  btn_wa.href = 'https://wa.me/51999888777?text=' + encodeURIComponent(mensaje);
+
+  // Eventos para quitar productos: click en el botón ✕ de cada item
+  lista.querySelectorAll('.carrito_item__quitar').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.dataset.index);
+      // dataset.index lee el atributo data-index del HTML
+      carrito.splice(idx, 1);
+      // splice(idx, 1) = quita 1 elemento en la posición idx
+      actualizarCarrito(); // redibuja el carrito
+    });
+  });
 }
 
 
-// ================================================
-// FORMULARIO DE CONTACTO — solo se ejecuta si existe
-// ================================================
+/* ============================================================
+   MODAL DE PRODUCTO — desde aquí
+   Aparece al hacer click en cualquier tarjeta.
+   Lee los datos del producto desde los atributos data-* del HTML.
+   Permite agregar el producto al carrito visual.
+============================================================ */
 
-// Busca el formulario por su id. Si la página no tiene formulario, devuelve null.
-const formulario_contacto = document.getElementById('formulario_contacto');
+// Creamos el modal una vez y lo insertamos en el body
+const modal = document.createElement('div');
+modal.className = 'modal_producto';
+modal.id = 'modal_producto';
+modal.innerHTML = `
+  <div class="modal_producto__fondo"></div>
+  <div class="modal_producto__caja">
+    <button class="btn_modal_cerrar" id="btn_modal_cerrar">✕</button>
 
-// Solo entra aquí si realmente existe un formulario en la página
-if (formulario_contacto) {
+    <!-- Foto del producto (izquierda) -->
+    <div class="modal_producto__foto">
+      <img id="modal_img" src="" alt="">
+    </div>
 
-  // 'submit' es el evento que se dispara cuando el usuario hace clic en "Enviar"
-  formulario_contacto.addEventListener('submit', (e) => {
+    <!-- Info del producto (derecha) -->
+    <div class="modal_producto__info">
+      <span class="modal_producto__etiqueta" id="modal_etiqueta"></span>
+      <h2 class="modal_producto__nombre" id="modal_nombre"></h2>
+      <p class="modal_producto__precio" id="modal_precio"></p>
+      <p class="modal_producto__descripcion" id="modal_desc"></p>
 
-    // e.preventDefault() → cancela el comportamiento por defecto del formulario.
-    // Sin esto, el formulario recarga la página al enviarse (comportamiento nativo del HTML).
-    e.preventDefault();
+      <p class="modal_producto__tallas_titulo">Selecciona tu talla:</p>
+      <div class="modal_producto__tallas">
+        <div class="talla">XS</div>
+        <div class="talla">S</div>
+        <div class="talla seleccionada">M</div>
+        <div class="talla">L</div>
+        <div class="talla">XL</div>
+      </div>
 
-    // .value obtiene el texto que el usuario escribió en ese campo.
-    // .trim() elimina los espacios en blanco al inicio y al final del texto.
-    const nombre  = document.getElementById('campo_nombre').value.trim();
-    const email   = document.getElementById('campo_email').value.trim();
-    const asunto  = document.getElementById('campo_asunto').value;
-    const mensaje = document.getElementById('campo_mensaje').value.trim();
+      <div class="modal_producto__btns">
+        <button class="btn_agregar_carrito" id="btn_agregar">
+          Agregar al carrito
+        </button>
+      </div>
+    </div>
 
-    // Validación: el símbolo ! significa "no". Entonces !nombre = "si nombre está vacío".
-    // Si cualquiera de los tres campos obligatorios está vacío → muestra alerta y para.
-    // "return" dentro de una función la detiene ahí mismo, no sigue ejecutando.
-    if (!nombre || !email || !mensaje) {
-      alert('Por favor completa todos los campos obligatorios.');
-      return; // ← detiene la función, no sigue
-    }
+  </div>
+`;
+document.body.appendChild(modal);
 
-    // Busca el botón de enviar dentro del formulario
-    const btn = formulario_contacto.querySelector('.btn_enviar');
+// Función para ABRIR el modal con los datos de una tarjeta
+function abrirModal(tarjeta) {
+  // Leemos los atributos data-* de la tarjeta clickeada
+  // data-img="..." → tarjeta.dataset.img
+  document.getElementById('modal_img').src             = tarjeta.dataset.img     || '';
+  document.getElementById('modal_nombre').textContent  = tarjeta.dataset.nombre  || '';
+  document.getElementById('modal_precio').textContent  = tarjeta.dataset.precio  || '';
+  document.getElementById('modal_desc').textContent    = tarjeta.dataset.desc    || 'Prenda vintage en excelente estado.';
+  document.getElementById('modal_etiqueta').textContent = tarjeta.dataset.etiqueta || 'Ropa Vintage';
 
-    // Cambia el texto del botón para que el usuario sepa que está procesando
-    btn.textContent = 'Enviando...';
+  // Resetear el botón por si quedó en estado "Agregado ✓"
+  const btn = document.getElementById('btn_agregar');
+  btn.textContent = 'Agregar al carrito';
+  btn.classList.remove('agregado');
 
-    // Desactiva el botón para que no hagan clic dos veces
-    btn.disabled = true;
-
-    // setTimeout(función, milisegundos) → espera X ms y luego ejecuta la función.
-    // Aquí simula un "envío al servidor" esperando 1.2 segundos.
-    // En un proyecto real, aquí iría el código que manda los datos a un backend.
-    setTimeout(() => {
-      // Oculta el formulario agregándole la clase "oculto" (display:none en CSS)
-      formulario_contacto.classList.add('oculto');
-
-      // Muestra el mensaje de éxito quitándole la clase "oculto"
-      document.getElementById('form_exitoso').classList.remove('oculto');
-    }, 1200); // ← 1200 milisegundos = 1.2 segundos de espera
-  });
+  modal.classList.add('visible'); // muestra el modal
+  document.body.style.overflow = 'hidden'; // evita scroll detrás
 }
 
+// Función para CERRAR el modal
+function cerrarModal() {
+  modal.classList.remove('visible');
+  document.body.style.overflow = ''; // restaura el scroll
+}
 
-// ================================================
-// ARMA TU ESTILO — solo se ejecuta si existe en la página
-// ================================================
+// Cerrar el modal al hacer click en el fondo o en la X
+modal.querySelector('.modal_producto__fondo').addEventListener('click', cerrarModal);
+document.getElementById('btn_modal_cerrar').addEventListener('click', cerrarModal);
 
-// Busca el botón "Armar mi look". Si no existe en la página, devuelve null.
-const btn_armar = document.getElementById('btn_armar');
+// Selector de tallas: click en una talla la marca como seleccionada
+modal.querySelectorAll('.talla').forEach(t => {
+  t.addEventListener('click', () => {
+    modal.querySelectorAll('.talla').forEach(x => x.classList.remove('seleccionada'));
+    t.classList.add('seleccionada');
+    // Quita .seleccionada de todas y agrega solo a la clickeada
+  });
+});
 
-if (btn_armar) {
+// Botón "Agregar al carrito"
+document.getElementById('btn_agregar').addEventListener('click', () => {
+  const btn = document.getElementById('btn_agregar');
 
-  // "looks" es un objeto: una estructura que guarda datos organizados con claves.
-  // Cada clave es una combinación de género + década + ocasión.
-  // Ejemplo: "hombre_70s_casual" → { titulo: "...", desc: "...", link: "..." }
-  // Es como un diccionario: buscas por la clave y obtienes la información.
-  const looks = {
-    hombre_70s_casual:  { titulo: "El Bohemio Urbano",     desc: "Jean acampanado + camisa de cuadros abierta + polo blanco. Zapatillas bajas de cuero. Cómodo sin perder estilo.", link: "varones.html" },
-    hombre_70s_salida:  { titulo: "El Groovy de la Noche", desc: "Pantalón ancho + camisa floral + saco de pana. El look que roba miradas en cualquier reunión.", link: "varones.html" },
-    hombre_70s_fecha:   { titulo: "El Romántico Retro",    desc: "Pantalón de tiro alto + camisa crema + cinturón trenzado. Elegante, diferente, memorable.", link: "varones.html" },
-    hombre_80s_casual:  { titulo: "El Deportivo Bold",     desc: "Jean recto + polo de rayas anchas + Converse blancos. Colores fuertes, actitud más fuerte.", link: "varones.html" },
-    hombre_80s_salida:  { titulo: "El Miami Vice",         desc: "Pantalón claro + saco pastel + polo blanco + mocasines sin medias. Confiado y relajado.", link: "varones.html" },
-    hombre_80s_fecha:   { titulo: "El Galán Ochentera",    desc: "Jean oscuro + camisa de seda + casaca de cuero negro. Clásico pero con fuerza.", link: "varones.html" },
-    hombre_90s_casual:  { titulo: "El Grunge Cotidiano",   desc: "Jean ancho + polo básico + camisa flannel abierta. Cómodo, sin esfuerzo, con personalidad.", link: "varones.html" },
-    hombre_90s_salida:  { titulo: "El Skater Vintage",     desc: "Cargos anchos + polo de banda + zapatillas chunky. El look que nunca pasa de moda.", link: "varones.html" },
-    hombre_90s_fecha:   { titulo: "El Indie Romántico",    desc: "Jean slim + camisa Oxford arremangada + zapatillas blancas. Simple pero bien pensado.", link: "varones.html" },
-    mujer_70s_casual:   { titulo: "La Boho Libre",         desc: "Falda larga floral + blusa bordada + sandalias planas. Fluida y natural.", link: "mujeres.html" },
-    mujer_70s_salida:   { titulo: "La Diva Disco",         desc: "Pantalón acampanado + top de lentejuelas + plataformas. Para brillar sin pedir permiso.", link: "mujeres.html" },
-    mujer_70s_fecha:    { titulo: "La Musa de los 70",     desc: "Vestido midi envolvente + cinturón dorado + aretes largos. Elegancia sin artificios.", link: "mujeres.html" },
-    mujer_80s_casual:   { titulo: "La Popstar Relajada",   desc: "Jean mom + polo oversized fajado + sneakers blancos. Despreocupada pero con estilo.", link: "mujeres.html" },
-    mujer_80s_salida:   { titulo: "La Power Girl",         desc: "Falda de tubo + blazer de hombros marcados + tacones bajos. Poderosa y lista.", link: "mujeres.html" },
-    mujer_80s_fecha:    { titulo: "La Noche Neón",         desc: "Vestido ajustado + cinturón chunky + tacones. Audaz, sexy, completamente auténtica.", link: "mujeres.html" },
-    mujer_90s_casual:   { titulo: "La It Girl Noventera",  desc: "Jean de tiro alto + crop top + zapatillas chunky. El look que vuelve cada temporada.", link: "mujeres.html" },
-    mujer_90s_salida:   { titulo: "La Indie Urbana",       desc: "Falda mini plisada + medias de rejilla + bota de plataforma. Actitud total.", link: "mujeres.html" },
-    mujer_90s_fecha:    { titulo: "La Romántica Grunge",   desc: "Vestido floral + bota de cuero + chaqueta de jean. El contraste que te hace recordar.", link: "mujeres.html" },
+  // Leer la talla seleccionada
+  const talla_el = modal.querySelector('.talla.seleccionada');
+  const talla = talla_el ? talla_el.textContent : 'M';
+
+  // Leer los datos actuales del modal
+  const producto = {
+    nombre:  document.getElementById('modal_nombre').textContent,
+    precio:  document.getElementById('modal_precio').textContent,
+    img:     document.getElementById('modal_img').src,
+    talla:   talla
   };
 
-  // Guarda referencias a los elementos del HTML donde se mostrará el resultado
-  const resultado_look   = document.getElementById('resultado_look');
-  const resultado_titulo = document.getElementById('resultado_titulo');
-  const resultado_desc   = document.getElementById('resultado_descripcion');
-  const btn_link_look    = document.getElementById('btn_comprar_look');
+  // Agregar el producto al array del carrito
+  carrito.push(producto);
+  // push agrega un elemento al final del array
 
-  // Cuando el usuario hace clic en "Armar mi look"...
-  btn_armar.addEventListener('click', () => {
+  // Actualizar la vista del carrito
+  actualizarCarrito();
 
-    // Lee el valor seleccionado en cada desplegable (select)
-    // Ejemplo: sel_genero podría valer "hombre" o "mujer"
-    const genero  = document.getElementById('sel_genero').value;
-    const decada  = document.getElementById('sel_decada').value;
-    const ocasion = document.getElementById('sel_ocasion').value;
+  // Cambiar el botón a estado "Agregado"
+  btn.textContent = '✓ Agregado';
+  btn.classList.add('agregado'); // se vuelve verde
 
-    // Si alguno de los tres no fue seleccionado → muestra alerta y para
-    if (!genero || !decada || !ocasion) {
-      alert('¡Elige las 3 opciones para armar tu look!');
-      return;
+  // Mostrar el toast de confirmación
+  const toast_el = document.getElementById('toast_carrito');
+  toast_el.classList.add('visible');
+  setTimeout(() => toast_el.classList.remove('visible'), 2500);
+  // setTimeout ejecuta algo después de X milisegundos (2.5 segundos)
+
+  // Cerrar el modal y abrir el carrito después de un momento
+  setTimeout(() => {
+    cerrarModal();
+    panel.classList.add('abierto'); // abre el panel carrito
+  }, 900);
+});
+
+// Conectar cada tarjeta con el modal
+// Cuando el usuario hace click en una tarjeta, se abre el modal
+document.querySelectorAll('.tarjeta').forEach(tarjeta => {
+  tarjeta.addEventListener('click', (e) => {
+    // e.target = el elemento exacto donde se hizo click
+    // Si el click fue en el botón "Ver prenda", no hacemos nada
+    // porque el botón tiene su propio listener abajo
+    if (e.target.classList.contains('btn_comprar')) return;
+    abrirModal(tarjeta);
+  });
+
+  // El botón "Ver prenda" también abre el modal
+  const btn = tarjeta.querySelector('.btn_comprar');
+  if (btn) btn.addEventListener('click', () => abrirModal(tarjeta));
+});
+
+/* MODAL DE PRODUCTO — termina aquí */
+/* CARRITO VISUAL — termina aquí */
+
+
+/* ============================================================
+   FORMULARIO DE CONTACTO — desde aquí
+   Solo se ejecuta si existe #formulario_contacto en la página.
+   Al enviarlo, muestra un mensaje de éxito sin recargar.
+============================================================ */
+const formulario_contacto = document.getElementById('formulario_contacto');
+
+if (formulario_contacto) {
+  formulario_contacto.addEventListener('submit', (e) => {
+    e.preventDefault();
+    // preventDefault() evita que la página se recargue al enviar.
+    // Por defecto los formularios HTML recargan la página.
+
+    const nombre  = document.getElementById('campo_nombre').value.trim();
+    const email   = document.getElementById('campo_email').value.trim();
+    const mensaje = document.getElementById('campo_mensaje').value.trim();
+    // .value = texto escrito en el campo
+    // .trim() = quita espacios al inicio y al final
+
+    if (!nombre || !email || !mensaje) {
+      alert('Por favor completa todos los campos.');
+      return; // sale de la función sin hacer nada más
     }
 
-    // Construye la clave buscando en el objeto "looks".
-    // Ejemplo: genero="hombre", decada="70s", ocasion="casual"
-    //          → clave = "hombre_70s_casual"
-    //          → looks["hombre_70s_casual"] → { titulo: "El Bohemio Urbano", ... }
-    const look = looks[genero + '_' + decada + '_' + ocasion];
+    // Simula el envío con una animación de 1.2 segundos
+    const btn = formulario_contacto.querySelector('.btn_enviar');
+    btn.textContent = 'Enviando...';
+    btn.disabled = true; // desactiva el botón
 
-    if (look) {
-      // Pone el título y descripción del look en los elementos del HTML
-      resultado_titulo.textContent = look.titulo;
-      resultado_desc.textContent   = look.desc;
-
-      // Cambia el href del botón para que lleve a la página correcta (varones o mujeres)
-      btn_link_look.href = look.link;
-
-      // Muestra la tarjeta de resultado quitándole la clase "oculto"
-      resultado_look.classList.remove('oculto');
-
-      // Hace scroll automático y suave para que la tarjeta quede visible en pantalla
-      resultado_look.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
+    setTimeout(() => {
+      // Después de 1.2s: oculta el form y muestra mensaje de éxito
+      formulario_contacto.classList.add('oculto');
+      document.getElementById('form_exitoso').classList.remove('oculto');
+    }, 1200);
   });
 }
+
+/* FORMULARIO DE CONTACTO — termina aquí */
