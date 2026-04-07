@@ -1,290 +1,2073 @@
-/* ================================================
-   VARIABLES GLOBALES
-   Cambia aquí y cambia en toda la web
-================================================ */
+/* ================================================================
+   ARCHIVO: estilo.css
+   
+   QUÉ ES UN ARCHIVO CSS:
+   CSS = Cascading Style Sheets (Hojas de Estilo en Cascada).
+   HTML construye la ESTRUCTURA de la página (el esqueleto).
+   CSS le da el DISEÑO VISUAL (colores, tamaños, posición).
+   
+   "En cascada" significa que los estilos se aplican de arriba
+   a abajo, y si dos reglas afectan al mismo elemento,
+   gana la que viene más abajo (la más específica).
+   
+   CÓMO SE ESCRIBE CSS:
+   selector {
+     propiedad: valor;
+   }
+   
+   Ejemplo:
+   h1 {                    ← selector: a quién le aplica
+     color: red;           ← propiedad: qué cambia
+     font-size: 24px;      ← valor: cómo lo cambia
+   }
+   
+   CÓMO SE CONECTA AL HTML:
+   En el <head> de cada página HTML:
+   <link rel="stylesheet" href="estilo.css">
+================================================================ */
+
+
+/* ================================================================
+   VARIABLES GLOBALES — desde aquí
+   
+   QUÉ ES UNA VARIABLE:
+   Es una caja con nombre que guarda un valor.
+   Si mañana quieres cambiar el color principal de la tienda,
+   solo cambias --saddle UNA vez y se actualiza en toda la web.
+   Sin variables tendrías que buscar y cambiar ese color
+   en decenas de lugares diferentes (muy propenso a errores).
+   
+   SINTAXIS DE VARIABLES CSS:
+   --nombre-variable: valor;    ← así se DEFINE
+   var(--nombre-variable)       ← así se USA
+   
+   :root es un selector especial que significa "el elemento
+   raíz de la página" (el <html>). Al poner las variables
+   aquí, están disponibles en TODO el documento.
+================================================================ */
 :root {
+
+  /* ---- COLORES ---- */
+  /* Usamos nombres en inglés porque el navegador reconoce
+     muchos colores por nombre: "red", "blue", "goldenrod", etc.
+     Así no necesitamos memorizar códigos hexadecimales (#c8963e) */
+
   --saddle:    saddlebrown;
+  /* saddlebrown = color de cuero de montura de caballo.
+     Es el marrón principal de toda la tienda */
+
   --gold:      goldenrod;
+  /* goldenrod = vara de oro, un dorado cálido vintage.
+     Se usa para acentos, bordes decorativos y hover */
+
   --brick:     firebrick;
+  /* firebrick = ladrillo de fuego, rojo intenso.
+     Se usa para precios y alertas */
+
   --cream:     cornsilk;
+  /* cornsilk = seda de maíz, crema muy claro.
+     Es el fondo principal de la página */
+
   --cream2:    antiquewhite;
+  /* antiquewhite = blanco antiguo, crema un poco más oscuro.
+     Se usa para alternar el fondo entre secciones */
+
   --darkbrown: #2a1a0e;
+  /* Este sí usa código hexadecimal (#2a1a0e) porque no hay
+     un nombre en inglés para este color específico.
+     Hexadecimal: # + 6 caracteres (0-9 y a-f).
+     2a=rojo, 1a=verde, 0e=azul. Poco de todo = casi negro */
+
   --white:     white;
+  /* Aunque "white" es simple, tenerlo como variable
+     permite cambiarlo fácilmente si algún día
+     quisiéramos un "blanco" ligeramente diferente */
+
+  /* ---- MEDIDAS ---- */
   --ancho_cajon: 280px;
-  --velocidad:   0.4s;
-}
+  /* px = píxeles. El menú lateral mide 280px de ancho.
+     Si quieres un menú más ancho, solo cambias aquí */
 
-/* ================================================
-   RESET Y BASE
-================================================ */
+  --velocidad: 0.4s;
+  /* s = segundos. Todas las animaciones duran 0.4 segundos.
+     Si lo pones más alto (1s) las animaciones van más lentas.
+     Si lo bajas (0.1s) van más rápidas */
+
+  /* ---- TIPOGRAFÍA ---- */
+  --fuente: 'Playfair Display', serif;
+  /* 'Playfair Display' es la fuente que descargamos de Google Fonts.
+     "serif" es el respaldo: si Google Fonts no carga,
+     el navegador usará cualquier fuente serif que tenga instalada.
+     serif = fuentes con remates (como Times New Roman).
+     sans-serif = fuentes sin remates (como Arial) */
+}
+/* VARIABLES GLOBALES — termina aquí */
+
+
+/* ================================================================
+   RESET BASE — desde aquí
+   
+   QUÉ PROBLEMA RESUELVE:
+   Cada navegador (Chrome, Firefox, Safari, Edge) tiene sus
+   propios estilos predeterminados. Por ejemplo:
+   - Chrome pone margin: 8px al body
+   - Firefox pone tamaños de fuente diferentes a los elementos
+   - Algunos navegadores ponen padding a las listas <ul>
+   
+   Si no hacemos reset, la web se ve diferente en cada navegador.
+   El reset elimina TODO eso para partir desde cero.
+================================================================ */
 *, *::before, *::after {
-  margin: 0; padding: 0;
+  /* El selector * significa "TODOS los elementos HTML".
+     *::before y *::after son elementos virtuales que CSS
+     puede crear (los usamos para la X del botón cerrar) */
+
+  margin: 0;
+  /* margin = espacio EXTERIOR del elemento (fuera del borde).
+     Lo ponemos en 0 para quitar todos los márgenes por defecto */
+
+  padding: 0;
+  /* padding = espacio INTERIOR del elemento (dentro del borde).
+     Lo ponemos en 0 para quitar todos los paddings por defecto */
+
   box-sizing: border-box;
+  /* Esta propiedad cambia cómo se calcula el tamaño de los elementos.
+     
+     SIN box-sizing (comportamiento por defecto):
+     Un div con width: 300px y padding: 20px
+     MIDE EN REALIDAD: 300 + 20 + 20 = 340px (¡sorpresa!)
+     
+     CON box-sizing: border-box:
+     El mismo div SIGUE midiendo 300px.
+     El padding se resta del interior, no se suma al exterior.
+     
+     Es como decir: "el tamaño que yo declaro es el tamaño FINAL,
+     sin importar cuánto padding tenga adentro" */
 }
+
 body {
+  /* body es el elemento que contiene TODO el contenido visible.
+     Lo que ponemos aquí afecta a toda la página */
+
   background: var(--cream);
+  /* Fondo crema claro en toda la página.
+     Usamos var(--cream) en lugar de escribir "cornsilk"
+     directamente, para mantener consistencia */
+
   color: var(--darkbrown);
-  font-family: 'Lato', sans-serif;
+  /* color = color del TEXTO.
+     Al ponerlo en body, todos los textos heredan este color
+     a menos que los sobreescribamos individualmente */
+
+  font-family: var(--fuente);
+  /* La fuente del body se hereda a TODOS los elementos hijos.
+     Así toda la web usa Playfair Display automáticamente */
+
   overflow-x: hidden;
+  /* overflow = qué pasa cuando el contenido se desborda.
+     overflow-x = solo en horizontal (eje X = izquierda-derecha).
+     hidden = esconde lo que se desborda.
+     
+     ¿Por qué lo necesitamos?
+     El menú cajón empieza a -280px (fuera de pantalla a la izquierda).
+     Sin este overflow-x: hidden, aparecería una barra de scroll
+     horizontal en la parte de abajo de la página */
 }
-a { text-decoration: none; }
 
-/* ================================================
-   CAPA OSCURA (overlay del cajón)
-================================================ */
+a {
+  text-decoration: none;
+  /* text-decoration = decoración del texto.
+     Por defecto, los <a> tienen subrayado azul.
+     "none" = ninguna decoración.
+     Cada link tendrá su propio color y estilo definido
+     más adelante en el CSS */
+}
+/* RESET BASE — termina aquí */
+
+
+/* ================================================================
+   CAPA OSCURA — desde aquí
+   
+   QUÉ ES:
+   Un div invisible que cubre TODA la pantalla.
+   Cuando el menú se abre, aparece oscuro detrás del menú.
+   Sirve para dos cosas:
+   1. Indica visualmente que el menú está activo
+   2. Al hacer click en ella, cierra el menú (JS lo maneja)
+================================================================ */
 .capa_oscura {
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,0.55);
-  opacity: 0; pointer-events: none;
+  position: fixed;
+  /* position: fixed = el elemento se "desprende" del flujo normal
+     y se fija en la pantalla (viewport).
+     Aunque el usuario haga scroll, la capa siempre cubre todo.
+     
+     Diferencia entre position values:
+     static   = posición normal (por defecto)
+     relative = se mueve RELATIVO a su posición original
+     absolute = se posiciona relativo a su padre más cercano
+                que tenga position != static
+     fixed    = se posiciona relativo a la VENTANA del navegador
+     sticky   = mezcla de relative y fixed */
+
+  inset: 0;
+  /* inset es un shorthand (atajo) que equivale a escribir:
+     top: 0;
+     right: 0;
+     bottom: 0;
+     left: 0;
+     Con los 4 en 0, el elemento cubre TODA la pantalla */
+
+  background: rgba(0, 0, 0, 0.55);
+  /* rgba = Red, Green, Blue, Alpha (opacidad).
+     rgba(0, 0, 0, 0.55) = negro al 55% de opacidad.
+     
+     Rango de cada valor:
+     - Rojo, Verde, Azul: 0 (nada) a 255 (máximo)
+     - Alpha (opacidad): 0 (transparente) a 1 (sólido)
+     
+     0,0,0 = negro puro (sin rojo, sin verde, sin azul)
+     0.55 = 55% opaco, 45% transparente */
+
+  opacity: 0;
+  /* opacity controla la transparencia del elemento COMPLETO.
+     0 = completamente transparente (invisible).
+     1 = completamente visible.
+     
+     ¿Diferencia entre opacity y rgba alpha?
+     rgba alpha: solo afecta al color de fondo
+     opacity: afecta a TODO el elemento (fondo + texto + hijos) */
+
+  pointer-events: none;
+  /* pointer-events = cómo el elemento responde al mouse/touch.
+     none = el elemento NO recibe clicks, hover, ni nada.
+     Es como si no existiera para el cursor.
+     
+     Lo necesitamos porque la capa está siempre en el DOM
+     (en el HTML), pero cuando está invisible no queremos
+     que bloquee los clicks del usuario */
+
   transition: opacity var(--velocidad);
+  /* transition = hace que los cambios de propiedad sean graduales.
+     
+     Sintaxis: transition: propiedad duración;
+     opacity var(--velocidad) = cuando opacity cambie,
+     el cambio tardará 0.4s en completarse.
+     Sin esto, la capa aparecería/desaparecería instantáneamente */
+
   z-index: 10;
+  /* z-index = orden de apilamiento (quién va encima de quién).
+     Piensa en capas de papel:
+     z-index: 1  = capa de abajo
+     z-index: 10 = capa en el medio
+     z-index: 20 = capa de arriba
+     
+     La capa oscura (10) va encima del contenido normal (0-1)
+     pero debajo del menú cajón (20) */
 }
-.capa_oscura.visible { opacity: 1; pointer-events: all; }
 
-/* ================================================
-   MENÚ CAJÓN
-================================================ */
+/* Esta clase la agrega JS cuando el menú se abre */
+.capa_oscura.visible {
+  opacity: 1;
+  /* Al agregar .visible, la capa se vuelve visible.
+     La transition hace que el cambio sea gradual (0.4s) */
+
+  pointer-events: all;
+  /* all = ahora sí recibe clicks.
+     Cuando el usuario haga click en la capa,
+     JS ejecuta la función cerrarMenu() */
+}
+/* CAPA OSCURA — termina aquí */
+
+
+/* ================================================================
+   MENÚ CAJÓN — desde aquí
+   
+   QUÉ ES UN MENÚ OFF-CANVAS:
+   Un panel que vive FUERA de la pantalla (off = fuera,
+   canvas = lienzo/pantalla).
+   Se desliza hacia adentro cuando el usuario lo abre.
+   
+   CÓMO FUNCIONA EL DESLIZAMIENTO:
+   1. CSS pone el menú en translateX(-100%) → fuera de pantalla
+   2. JS agrega la clase .abierto al menú
+   3. CSS detecta .abierto y cambia a translateX(0)
+   4. La transition hace el deslizamiento suave
+================================================================ */
 .menu_cajon {
-  position: fixed; top: 0; left: 0;
-  width: var(--ancho_cajon); height: 100%;
+  position: fixed;
+  /* fixed = siempre visible aunque el usuario haga scroll.
+     El menú cubre el contenido de fondo */
+
+  top: 0;
+  left: 0;
+  /* top: 0 = pegado al borde superior de la pantalla
+     left: 0 = pegado al borde izquierdo */
+
+  width: var(--ancho_cajon);
+  /* Usamos la variable definida en :root (280px).
+     Si quisiéramos cambiarlo, solo modificamos la variable */
+
+  height: 100%;
+  /* 100% = toda la altura disponible de la pantalla.
+     El menú va de arriba a abajo completamente */
+
   background: var(--saddle);
-  padding: 2rem 1.5rem;
+  /* Fondo marrón cuero */
+
+  padding: 0;
+  /* Sin padding porque el header y la lista
+     tienen su propio padding interno */
+
   transform: translateX(-100%);
+  /* transform = transforma el elemento visualmente
+     sin afectar el espacio que ocupa en el documento.
+     
+     translateX(-100%) = mueve el elemento -100% de SU PROPIO ancho
+     hacia la izquierda.
+     Como mide 280px: -100% = -280px
+     Queda completamente fuera de la pantalla a la izquierda */
+
   transition: transform var(--velocidad) ease;
+  /* Cuando transform cambie, se animará en 0.4s.
+     ease = empieza rápido y termina lento (suave al final) */
+
   z-index: 20;
-}
-.menu_cajon.abierto { transform: translateX(0); }
+  /* 20 = encima de la capa oscura (10) y del contenido (0-5) */
 
+  display: flex;
+  flex-direction: column;
+  /* flex = sistema de layout flexible.
+     column = los hijos se apilan verticalmente (de arriba a abajo).
+     Así el logo-header queda arriba, la lista en el medio,
+     y si hubiera algo al final, quedaría abajo */
+}
+
+/* JS agrega esta clase cuando el usuario abre el menú */
+.menu_cajon.abierto {
+  transform: translateX(0);
+  /* translateX(0) = vuelve a su posición original (sin mover).
+     La transition de 0.4s hace el deslizamiento suave desde
+     -280px hasta 0 */
+}
+
+/* Cabecera interior del cajón: contiene el logo "LBP" y la X */
+.menu_cajon__header {
+  display: flex;
+  /* flex = pone los hijos en fila (por defecto es row = horizontal) */
+
+  align-items: center;
+  /* Centra los hijos verticalmente dentro del header */
+
+  justify-content: space-between;
+  /* Distribuye los hijos: uno a cada extremo.
+     Logo a la izquierda, botón X a la derecha */
+
+  padding: 1.2rem 1.5rem;
+  /* 1.2rem arriba/abajo, 1.5rem izquierda/derecha.
+     rem = relativo al tamaño de fuente del elemento raíz (16px).
+     1rem = 16px, 1.5rem = 24px, 1.2rem = ~19px */
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  /* Línea separadora sutil debajo del header.
+     1px = grosor, solid = tipo línea, rgba(255,255,255,0.12) = blanco 12% opaco
+     El 12% de opacidad hace que sea muy sutil, apenas visible */
+}
+
+/* El texto "LBP" dentro del cajón */
 .menu_cajon__logo {
-  font-family: 'Playfair Display', serif;
-  font-size: 2.2rem; color: var(--gold);
-  margin: 1rem 0 2rem;
-  letter-spacing: 4px; text-align: center;
-}
-.menu_cajon__lista { list-style: none; }
-.menu_cajon__lista li { border-bottom: 1px solid rgba(255,255,255,0.1); }
-.menu_cajon__lista a {
-  display: block; padding: 0.9rem 0;
-  color: var(--cream); font-size: 0.88rem;
-  letter-spacing: 2px; text-transform: uppercase;
-  transition: color 0.2s, padding-left 0.2s;
-}
-.menu_cajon__lista a:hover { color: var(--gold); padding-left: 8px; }
-/* Link activo — la página donde estás -->
-.menu_cajon__lista a.activo { color: var(--gold); border-left: 2px solid var(--gold); padding-left: 8px; }
+  font-family: var(--fuente);
+  /* Usa la misma fuente que toda la web */
 
-.menu_cajon__direccion {
-  color: rgba(255,255,255,0.35); font-size: 0.78rem;
-  position: absolute; bottom: 2rem; left: 1.5rem;
+  font-size: 2rem;
+  /* 2rem = 32px. Tamaño grande para que destaque */
+
+  color: var(--gold);
+  /* Color dorado para el logo dentro del menú marrón */
+
+  letter-spacing: 4px;
+  /* letter-spacing = espacio entre cada letra.
+     4px hace que "LBP" se vea más espaciado y elegante */
 }
+
+/* ---- BOTÓN X PARA CERRAR ----
+   Truco CSS: la X está hecha con dos líneas (::before y ::after)
+   rotadas en ángulos opuestos. No necesitamos imagen ni ícono.
+   
+   ::before y ::after son "pseudo-elementos": elementos virtuales
+   que CSS crea sin necesidad de HTML extra. */
 .btn_cerrar {
-  background: none; border: none;
-  color: var(--cream); font-size: 1.3rem;
-  cursor: pointer; opacity: 0.6; transition: opacity 0.2s;
-}
-.btn_cerrar:hover { opacity: 1; }
+  background: rgba(255, 255, 255, 0.08);
+  /* Fondo blanco muy transparente (8%) */
 
-/* ================================================
-   BARRA SUPERIOR
-================================================ */
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  /* Borde blanco 15% opaco = casi invisible, sutil */
+
+  width: 32px;
+  height: 32px;
+  /* Cuadrado de 32x32 píxeles */
+
+  border-radius: 50%;
+  /* border-radius redondea las esquinas.
+     50% en un cuadrado = círculo perfecto.
+     Matemáticamente: el radio del borde = 50% del ancho = 16px,
+     que es exactamente la mitad = círculo */
+
+  cursor: pointer;
+  /* Muestra la manito del mouse al pasar por encima.
+     Los botones por defecto no muestran la manito */
+
+  position: relative;
+  /* Necesario para que ::before y ::after se posicionen
+     DENTRO de este botón.
+     Los pseudo-elementos con position: absolute se ubican
+     relativo al primer padre con position != static */
+
+  transition: background 0.2s;
+  /* Cuando el fondo cambie (en hover), se animará en 0.2s */
+}
+
+.btn_cerrar:hover {
+  background: rgba(255, 255, 255, 0.18);
+  /* Al hacer hover, el fondo se vuelve un poco más blanco.
+     :hover es una pseudo-clase que aplica cuando el cursor
+     está encima del elemento */
+}
+
+/* Las dos líneas que forman la X */
+.btn_cerrar::before,
+.btn_cerrar::after {
+  /* Afectamos a ::before Y ::after juntos con esta regla */
+
+  content: '';
+  /* content es OBLIGATORIO para que ::before y ::after aparezcan.
+     Sin content, los pseudo-elementos no se renderizan.
+     '' = contenido vacío (solo visual, sin texto) */
+
+  position: absolute;
+  /* Se posicionan relativo al .btn_cerrar (que tiene position: relative) */
+
+  top: 50%;
+  left: 50%;
+  /* Colocamos el origen en el centro exacto del botón.
+     Pero esto coloca la ESQUINA SUPERIOR IZQUIERDA en el centro,
+     no el centro del pseudo-elemento en el centro.
+     Por eso necesitamos el translate abajo */
+
+  width: 14px;
+  height: 1.5px;
+  /* Un rectángulo delgado de 14px x 1.5px = una línea */
+
+  background: var(--cream);
+  /* Color crema claro para la X */
+
+  border-radius: 2px;
+  /* Pequeño redondeo en los extremos de la línea */
+}
+
+.btn_cerrar::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+  /* translate(-50%, -50%): mueve el elemento -50% de SU PROPIO
+     tamaño en X e Y. Esto lo centra perfectamente dentro del botón.
+     Sin esto, la X estaría descentrada hacia abajo-derecha.
+     
+     rotate(45deg): gira 45 grados en sentido horario.
+     Una línea horizontal girada 45° = diagonal / */
+}
+
+.btn_cerrar::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+  /* Igual que ::before pero girado -45° (sentido antihorario).
+     Una línea horizontal girada -45° = diagonal \
+     / + \ = X */
+}
+
+/* Lista de links dentro del cajón */
+.menu_cajon__lista {
+  list-style: none;
+  /* list-style quita los puntos o números de las listas.
+     Por defecto, <ul> tiene puntos negros delante de cada <li>.
+     "none" los elimina */
+
+  padding: 1rem 1.5rem;
+  /* Espacio interior: 16px arriba/abajo, 24px izquierda/derecha */
+
+  flex: 1;
+  /* En un contenedor flex (el .menu_cajon), flex: 1 hace que
+     este elemento crezca para ocupar TODO el espacio disponible.
+     Así la lista llena el cajón de arriba a abajo */
+}
+
+.menu_cajon__lista li {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  /* Línea separadora muy sutil entre cada elemento del menú.
+     8% de opacidad = casi invisible = elegante */
+}
+
+.menu_cajon__lista a {
+  display: block;
+  /* Por defecto, los <a> son "inline" (se alinean con el texto).
+     "block" los convierte en bloques que ocupan todo el ancho.
+     Esto hace que TODA la fila sea clickeable,
+     no solo el texto del link */
+
+  padding: 1rem 0;
+  /* 16px arriba y abajo. 0 a los lados porque ya tiene
+     el padding del padre (.menu_cajon__lista) */
+
+  color: var(--cream);
+  /* Texto crema sobre fondo marrón */
+
+  font-size: 0.8rem;
+  /* 0.8rem = 12.8px. Un poco pequeño para el estilo minimalista */
+
+  font-family: var(--fuente);
+
+  letter-spacing: 3px;
+  /* Espaciado generoso entre letras para estilo elegante */
+
+  text-transform: uppercase;
+  /* uppercase = convierte TODO EL TEXTO a MAYÚSCULAS.
+     Aunque en el HTML escribamos "Inicio", se muestra "INICIO" */
+
+  transition: color 0.2s, padding-left 0.2s;
+  /* Animamos dos propiedades a la vez.
+     Cuando el usuario haga hover, el color y el padding-left
+     cambiarán gradualmente en 0.2 segundos */
+}
+
+.menu_cajon__lista a:hover {
+  color: var(--gold);
+  /* Al hacer hover, el texto se vuelve dorado */
+
+  padding-left: 8px;
+  /* Y se desplaza 8px hacia la derecha.
+     Como tiene transition, el desplazamiento es suave.
+     Da la ilusión de que el link "entra" al pasar el cursor */
+}
+
+/* Link de la página actual (JS agrega esta clase automáticamente) */
+.menu_cajon__lista a.activo {
+  color: var(--gold);
+  /* El link de la página donde estás = dorado */
+
+  border-left: 2px solid var(--gold);
+  /* Línea dorada a la izquierda como indicador visual */
+
+  padding-left: 8px;
+  /* Se desplaza a la derecha para dar espacio al borde */
+}
+/* MENÚ CAJÓN — termina aquí */
+
+
+/* ================================================================
+   BARRA SUPERIOR — desde aquí
+   
+   La barra que siempre está arriba mientras navegas.
+   Contiene: botón hamburguesa | nombre de la tienda | "Vintage · Lima"
+================================================================ */
 .barra_superior {
-  position: fixed; top: 0; left: 0; right: 0;
-  height: 64px; background: var(--saddle);
-  display: flex; align-items: center;
-  padding: 0 1.5rem; gap: 1rem;
-  z-index: 5; border-bottom: 2px solid var(--gold);
-}
-.barra_superior__logo {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.2rem; color: var(--cream);
-  letter-spacing: 2px; flex: 1;
-}
-.barra_superior__tag {
-  font-size: 0.72rem; color: var(--gold);
-  letter-spacing: 3px; text-transform: uppercase;
-}
-.btn_hamburguesa {
-  background: none; border: none; cursor: pointer;
-  display: flex; flex-direction: column; gap: 5px; padding: 4px;
-}
-.btn_hamburguesa span {
-  display: block; width: 22px; height: 2px;
-  background: var(--cream); border-radius: 2px; transition: background 0.2s;
-}
-.btn_hamburguesa:hover span { background: var(--gold); }
+  position: fixed;
+  /* fixed = siempre visible. No se mueve con el scroll */
 
-/* ================================================
-   TÍTULO DE SECCIÓN (usado en todas las páginas)
-================================================ */
-.titulo_seccion {
-  font-family: 'Playfair Display', serif;
-  font-size: 2rem; color: var(--saddle);
-  margin-bottom: 2rem; padding-bottom: 0.5rem;
+  top: 0;
+  left: 0;
+  right: 0;
+  /* top: 0 = pegado arriba.
+     left: 0 y right: 0 = ocupa todo el ancho de la pantalla.
+     Equivale a width: 100%, pero funciona mejor con position fixed */
+
+  height: 64px;
+  /* Alto fijo de 64px. Todas las páginas tienen padding-top: 64px
+     en su primer elemento para que el contenido no quede tapado */
+
+  background: var(--saddle);
+  /* Fondo marrón cuero, mismo que el menú cajón */
+
+  display: flex;
+  align-items: center;
+  /* Centra todos los hijos verticalmente dentro de los 64px */
+
+  padding: 0 1.5rem;
+  /* Sin padding arriba/abajo (ya tiene height fijo).
+     24px de padding a los lados para que el contenido
+     no quede pegado a los bordes */
+
+  gap: 1rem;
+  /* gap en flex = espacio entre los hijos.
+     16px entre el botón hamburguesa, el logo y el tag */
+
+  z-index: 5;
+  /* Encima del contenido normal (0) pero debajo del menú (20)
+     y la capa oscura (10) */
+
   border-bottom: 2px solid var(--gold);
-  display: inline-block; letter-spacing: 2px;
+  /* Línea dorada decorativa en la parte inferior de la barra.
+     Da el efecto de separación elegante con el contenido */
 }
-.titulo_seccion.claro { color: var(--cream); }
 
-/* ================================================
-   TARJETA DE PRODUCTO (usada en varones, mujeres, promos)
-================================================ */
+.barra_superior__logo {
+  font-family: var(--fuente);
+  font-size: 1.2rem;
+  /* 19.2px. No muy grande para que quepan todos los elementos */
+
+  color: var(--cream);
+  /* Texto crema sobre fondo marrón */
+
+  letter-spacing: 2px;
+
+  flex: 1;
+  /* TRUCO FLEX: flex: 1 hace que este elemento crezca y ocupe
+     TODO el espacio disponible entre sus hermanos.
+     
+     El botón hamburguesa y el tag tienen tamaño fijo.
+     El logo con flex: 1 ocupa todo lo que sobra.
+     
+     Resultado: botón [  LOGO (ocupa todo)  ] tag
+     El tag siempre queda a la derecha */
+}
+
+.barra_superior__tag {
+  /* "Vintage · Lima" */
+  font-size: 0.72rem;
+  /* Muy pequeño, solo decorativo */
+
+  color: var(--gold);
+  /* Dorado para contraste sutil con el logo crema */
+
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+/* Las 3 líneas del menú hamburguesa */
+.btn_hamburguesa {
+  background: none;
+  border: none;
+  /* Quitamos el fondo y borde que los botones tienen por defecto */
+
+  cursor: pointer;
+
+  display: flex;
+  flex-direction: column;
+  /* Apila los 3 spans verticalmente */
+
+  gap: 5px;
+  /* 5px entre cada línea */
+
+  padding: 4px;
+  /* Área clickeable un poco más grande que las líneas */
+}
+
+/* Cada una de las 3 líneas del ícono hamburguesa */
+.btn_hamburguesa span {
+  display: block;
+  /* Los <span> son inline por defecto, block los convierte
+     en elementos que respetan width y height */
+
+  width: 22px;
+  height: 2px;
+  /* Rectángulo fino de 22px x 2px = parece una línea */
+
+  background: var(--cream);
+  border-radius: 2px;
+  /* Pequeño redondeo en los extremos de cada línea */
+
+  transition: background 0.2s;
+}
+
+.btn_hamburguesa:hover span {
+  background: var(--gold);
+  /* Cuando el cursor pasa sobre el botón, las 3 líneas
+     se vuelven doradas simultáneamente */
+}
+/* BARRA SUPERIOR — termina aquí */
+
+
+/* ================================================================
+   TÍTULOS DE SECCIÓN
+   
+   Se usa para todos los encabezados como "Hombres",
+   "Todo el catálogo", "¿Dónde estamos?", etc.
+   
+   REUTILIZACIÓN EN CSS:
+   En lugar de repetir los mismos estilos en cada sección,
+   creamos UNA clase y la aplicamos donde necesitamos.
+   Esto hace el código más corto y fácil de mantener.
+================================================================ */
+.titulo_seccion {
+  font-family: var(--fuente);
+  font-size: 2rem;
+  /* 32px. Tamaño grande para que sea claramente un encabezado */
+
+  color: var(--saddle);
+  /* Marrón para los títulos en fondos claros */
+
+  margin-bottom: 2rem;
+  /* 32px de espacio debajo del título, separando el contenido */
+
+  padding-bottom: 0.5rem;
+  /* 8px de espacio entre el texto y la línea decorativa */
+
+  border-bottom: 2px solid var(--gold);
+  /* Línea dorada decorativa debajo del título.
+     ¿Por qué border y no un <hr>?
+     Con border podemos controlar exactamente el ancho,
+     ya que el border sigue al elemento */
+
+  display: inline-block;
+  /* TRUCO: Por defecto, los elementos de bloque (h2, h3, p)
+     ocupan el 100% del ancho de su contenedor.
+     Con display: inline-block, el elemento solo ocupa
+     el ancho de su contenido (el texto).
+     
+     Resultado: el border-bottom solo aparece bajo el texto,
+     no en toda la línea horizontal */
+
+  letter-spacing: 2px;
+}
+
+/* Versión para fondos oscuros (ej: sección "Arma tu Estilo") */
+.titulo_seccion.claro {
+  color: var(--cream);
+  /* El título se vuelve crema para verse en fondos oscuros.
+     Solo cambiamos el color, todo lo demás se hereda de
+     .titulo_seccion gracias al "cascading" (cascada) de CSS */
+}
+
+
+/* ================================================================
+   TARJETAS DE PRODUCTO — desde aquí
+   
+   QUÉ ES UN COMPONENTE:
+   En diseño web, un "componente" es un elemento reutilizable
+   con estructura y estilo propios. Las tarjetas son el
+   componente más importante de esta tienda.
+   
+   ESTRUCTURA DE UNA TARJETA:
+   <article class="tarjeta">
+     <div class="tarjeta__foto">
+       <img ...>
+       <div class="tarjeta__overlay">...</div>
+     </div>
+     <div class="tarjeta__info">
+       <h3 class="tarjeta__nombre">...</h3>
+       <p class="tarjeta__precio">...</p>
+       <button class="btn_comprar">...</button>
+     </div>
+   </article>
+   
+   CONVENCIÓN DE NOMBRES (BEM):
+   .tarjeta = bloque (el componente completo)
+   .tarjeta__foto = elemento (parte del componente, separado con __)
+   .tarjeta__nombre = elemento
+   .btn_comprar = modificador (elemento con estilo especial)
+================================================================ */
 .tarjeta {
-  background: var(--white); border-radius: 10px;
+  background: var(--white);
+  border-radius: 10px;
+  /* 10px de redondeo en las 4 esquinas */
+
   overflow: hidden;
-  box-shadow: 0 2px 12px rgba(139,69,19,0.12);
-  transition: transform 0.3s, box-shadow 0.3s; height: 100%;
-}
-.tarjeta:hover { transform: translateY(-5px); box-shadow: 0 8px 24px rgba(139,69,19,0.22); }
+  /* IMPORTANTE: cuando la imagen hace zoom en hover (scale 1.05),
+     sin overflow: hidden se saldría de los bordes redondeados.
+     hidden = corta todo lo que sobresalga del borde del elemento */
 
-.tarjeta__foto { height: 220px; overflow: hidden; }
+  box-shadow: 0 2px 12px rgba(139, 69, 19, 0.12);
+  /* box-shadow crea una sombra debajo del elemento.
+     Sintaxis: x y blur color
+     0 = sin desplazamiento horizontal
+     2px = 2px hacia abajo
+     12px = difuminado de 12px
+     rgba(139,69,19,0.12) = marrón con 12% opacidad = sombra cálida sutil */
+
+  transition: transform 0.3s, box-shadow 0.3s;
+  /* Animamos tanto el movimiento como la sombra en hover.
+     El resultado es que la tarjeta "flota" suavemente */
+
+  height: 100%;
+  /* En un grid o flexbox, las tarjetas pueden tener alturas
+     diferentes si los nombres son largos.
+     height: 100% hace que todas tengan la misma altura
+     (la del elemento más alto en su fila) */
+
+  cursor: pointer;
+  /* Toda la tarjeta muestra la manito. Indica que es clickeable */
+}
+
+.tarjeta:hover {
+  transform: translateY(-5px);
+  /* translateY(-5px) = mueve 5px hacia arriba.
+     Negativo = hacia arriba, positivo = hacia abajo.
+     Da la sensación de que la tarjeta "levita" */
+
+  box-shadow: 0 8px 24px rgba(139, 69, 19, 0.22);
+  /* La sombra crece y se oscurece.
+     8px más abajo, 24px de blur, 22% opacidad.
+     Una sombra más grande = elemento más "elevado" visualmente */
+}
+
+/* Contenedor de la imagen de la tarjeta */
+.tarjeta__foto {
+  height: 220px;
+  /* Alto fijo para que todas las fotos tengan la misma altura,
+     sin importar las dimensiones originales de las imágenes */
+
+  overflow: hidden;
+  /* Corta el zoom de la imagen para que no salga de la tarjeta */
+
+  position: relative;
+  /* NECESARIO: para que el .tarjeta__overlay (que tiene
+     position: absolute) se posicione DENTRO de la foto
+     y no en otra parte de la página */
+}
+
 .tarjeta__foto img {
-  width: 100%; height: 100%; object-fit: cover;
-  filter: sepia(15%); transition: transform 0.4s, filter 0.4s;
-}
-.tarjeta:hover .tarjeta__foto img { transform: scale(1.05); filter: sepia(0%); }
+  width: 100%;
+  height: 100%;
+  /* La imagen llena completamente el contenedor */
 
-.tarjeta__info { padding: 1rem 1.2rem 1.3rem; }
+  object-fit: cover;
+  /* object-fit = cómo se ajusta la imagen al contenedor.
+     cover = mantiene proporciones y RECORTA desde el centro.
+     Es como hacer zoom hasta que no haya espacio vacío.
+     
+     Alternativas:
+     contain = cabe completa pero puede dejar espacio vacío
+     fill = se estira/aplana para llenar (deforma la imagen)
+     none = tamaño original (puede desbordarse) */
+
+  filter: sepia(15%);
+  /* filter aplica efectos visuales a la imagen.
+     sepia() = efecto foto antigua/vintage.
+     15% = sutil, no exagerado.
+     0% = sin efecto, 100% = completamente sepia */
+
+  transition: transform 0.4s, filter 0.4s;
+  /* Animamos el zoom y el filtro al hacer hover en la tarjeta */
+}
+
+/* Cuando la tarjeta tiene hover, la imagen cambia */
+.tarjeta:hover .tarjeta__foto img {
+  /* Este selector se lee así:
+     "la img dentro de .tarjeta__foto,
+     cuando su ancestro .tarjeta tiene hover"
+     
+     Importante: el hover está en .tarjeta (la tarjeta completa)
+     no en la imagen. Así el efecto empieza aunque el cursor
+     esté sobre el texto de abajo, no solo sobre la foto */
+
+  transform: scale(1.05);
+  /* scale(1.05) = crece al 105% de su tamaño.
+     Como .tarjeta__foto tiene overflow: hidden,
+     el zoom queda contenido dentro del rectángulo */
+
+  filter: sepia(0%);
+  /* Quita el filtro sepia. La imagen muestra sus colores reales.
+     Da la impresión de que la foto "cobra vida" al hacer hover */
+}
+
+/* Capa oscura que aparece SOBRE la foto al hacer hover */
+.tarjeta__overlay {
+  position: absolute;
+  /* Se posiciona relativo a .tarjeta__foto (que tiene position: relative) */
+
+  inset: 0;
+  /* Cubre toda la foto */
+
+  background: rgba(42, 26, 14, 0.5);
+  /* Marrón oscuro semitransparente. 50% opaco.
+     Deja ver la foto debajo pero la oscurece */
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Centra el texto "Ver detalle" vertical y horizontalmente */
+
+  opacity: 0;
+  /* Invisible al inicio */
+
+  transition: opacity 0.3s;
+}
+
+/* El overlay aparece cuando .tarjeta tiene hover */
+.tarjeta:hover .tarjeta__overlay {
+  opacity: 1;
+  /* Se vuelve visible. La transition hace el fade gradual */
+}
+
+/* El texto "Ver detalle" dentro del overlay */
+.tarjeta__overlay span {
+  color: var(--cream);
+  font-family: var(--fuente);
+  font-size: 0.8rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  border: 1px solid var(--gold);
+  /* Marco dorado alrededor del texto */
+  padding: 0.5rem 1.2rem;
+  border-radius: 3px;
+}
+
+/* Sección de texto debajo de la foto */
+.tarjeta__info {
+  padding: 1rem 1.2rem 1.3rem;
+  /* top: 1rem, lados: 1.2rem, bottom: 1.3rem.
+     El bottom es un poco mayor para dar más espacio
+     debajo del botón */
+}
+
 .tarjeta__nombre {
-  font-family: 'Playfair Display', serif;
-  font-size: 1rem; color: var(--saddle); margin-bottom: 0.4rem;
+  font-family: var(--fuente);
+  font-size: 1rem;
+  /* 16px. Tamaño normal */
+  color: var(--saddle);
+  margin-bottom: 0.4rem;
+  /* Espacio pequeño entre nombre y precio */
 }
+
 .tarjeta__precio {
-  font-size: 1.15rem; font-weight: 700;
-  color: var(--brick); margin-bottom: 0.8rem;
+  font-size: 1.1rem;
+  /* Un poco más grande que el nombre para que destaque */
+  font-weight: 700;
+  /* 700 = negrita. Escala: 100 (muy delgado) a 900 (muy grueso).
+     400 = normal, 700 = bold */
+  color: var(--brick);
+  /* Rojo ladrillo para el precio. El rojo llama la atención */
+  margin-bottom: 0.8rem;
 }
-/* Precio original tachado (usado en promociones) */
+
+/* Precio original tachado (usado en tarjetas de promociones) */
 .tarjeta__precio_antes {
-  font-size: 0.9rem; color: #999;
-  text-decoration: line-through; margin-right: 6px;
+  font-size: 0.9rem;
+  /* Más pequeño que el precio actual para que sea secundario */
+  color: #999;
+  /* Gris neutro */
+  text-decoration: line-through;
+  /* line-through = tacha el texto.
+     Visualmente indica que era el precio viejo */
+  margin-right: 6px;
+  /* Espacio entre el precio tachado y el nuevo precio */
 }
-/* Badge OFERTA en la foto */
+
+/* Badge de descuento sobre la foto ("-30%") */
 .tarjeta__badge {
-  position: absolute; top: 10px; left: 10px;
-  background: var(--brick); color: var(--white);
-  font-size: 0.7rem; font-weight: 700;
-  letter-spacing: 1px; padding: 3px 8px;
-  border-radius: 3px; text-transform: uppercase;
+  position: absolute;
+  /* Se posiciona relativo a .tarjeta__foto */
+  top: 10px;
+  left: 10px;
+  /* Esquina superior izquierda, con 10px de margen */
+  background: var(--brick);
+  color: var(--white);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 3px 8px;
+  border-radius: 3px;
+  text-transform: uppercase;
 }
-.tarjeta__foto { position: relative; } /* necesario para el badge absolute */
 
+/* Botón "Ver prenda" / "Aprovechar oferta" */
 .btn_comprar {
-  width: 100%; padding: 0.55rem;
-  background: transparent; border: 1.5px solid var(--saddle);
-  color: var(--saddle); font-family: 'Lato', sans-serif;
-  font-size: 0.82rem; letter-spacing: 2px;
-  text-transform: uppercase; cursor: pointer; border-radius: 4px;
-  transition: background 0.25s, color 0.25s;
-}
-.btn_comprar:hover { background: var(--saddle); color: var(--cream); }
+  width: 100%;
+  /* El botón ocupa todo el ancho de .tarjeta__info */
 
-/* ================================================
-   FOOTER
-================================================ */
+  padding: 0.55rem;
+  /* Espacio interior. Sin especificar lados = aplica a todos */
+
+  background: transparent;
+  /* Fondo transparente = solo se ve el borde */
+
+  border: 1.5px solid var(--saddle);
+  /* Borde marrón de 1.5px. El botón "outline" es más elegante */
+
+  color: var(--saddle);
+  /* Texto marrón */
+
+  font-family: var(--fuente);
+  font-size: 0.82rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 4px;
+
+  transition: background 0.25s, color 0.25s;
+  /* Al hacer hover, fondo y color cambian gradualmente */
+}
+
+.btn_comprar:hover {
+  background: var(--saddle);
+  /* El fondo se llena de marrón */
+  color: var(--cream);
+  /* El texto se vuelve crema.
+     El efecto es que el botón "se llena" al hacer hover */
+}
+/* TARJETAS DE PRODUCTO — termina aquí */
+
+
+/* ================================================================
+   MODAL DE PRODUCTO — desde aquí
+   
+   QUÉ ES UN MODAL:
+   Una ventana que aparece encima de todo el contenido.
+   El usuario ve la info del producto sin salir de la página.
+   
+   CÓMO FUNCIONA:
+   1. Empieza con opacity: 0 y pointer-events: none (invisible)
+   2. JS agrega la clase .visible
+   3. CSS cambia a opacity: 1 y pointer-events: all
+   4. El transition hace el fade-in gradual
+================================================================ */
+.modal_producto {
+  position: fixed;
+  inset: 0;
+  /* Cubre toda la pantalla */
+
+  z-index: 100;
+  /* Encima de todo el contenido de la página */
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Centra la caja del modal en la pantalla */
+
+  padding: 1rem;
+  /* Para que en móvil la caja no toque los bordes */
+
+  opacity: 0;
+  pointer-events: none;
+  /* Invisible e inactivo al inicio */
+
+  transition: opacity 0.35s ease;
+}
+
+.modal_producto.visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* El fondo oscuro detrás de la caja */
+.modal_producto__fondo {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.72);
+  /* Negro al 72% = bastante oscuro */
+  cursor: pointer;
+  /* Al hacer click en el fondo (fuera de la caja), JS cierra el modal */
+}
+
+/* La caja blanca con el contenido */
+.modal_producto__caja {
+  position: relative;
+  /* Para que el botón X (absolute) se ubique dentro */
+
+  background: var(--cream);
+  border-radius: 14px;
+
+  max-width: 780px;
+  /* Ancho máximo. En pantallas más pequeñas, width: 100% lo controla */
+  width: 100%;
+  /* En móvil, ocupa todo el ancho disponible */
+
+  max-height: 90vh;
+  /* vh = viewport height (altura de la ventana del navegador).
+     90vh = 90% de la altura de la pantalla.
+     Evita que el modal sea más alto que la pantalla */
+
+  overflow-y: auto;
+  /* Si el contenido es muy alto, aparece scroll vertical */
+
+  display: flex;
+  flex-wrap: wrap;
+  /* flex con wrap: la foto (45%) e info (55%) están en fila.
+     En móvil se apilan verticalmente (media query abajo) */
+
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  /* Sombra grande para que el modal parezca "flotar" sobre la página */
+
+  transform: translateY(24px);
+  /* Empieza 24px más abajo.
+     Al combinarse con el fade-in, da un efecto de
+     "aparece desde abajo" más elegante que solo un fade */
+
+  transition: transform 0.35s ease;
+
+  border-top: 4px solid var(--gold);
+  /* Línea dorada decorativa en la parte superior de la caja */
+}
+
+/* Cuando el modal es visible, la caja sube a su posición */
+.modal_producto.visible .modal_producto__caja {
+  transform: translateY(0);
+}
+
+/* Foto del lado izquierdo */
+.modal_producto__foto {
+  width: 45%;
+  /* La foto ocupa el 45% del ancho de la caja */
+  min-height: 340px;
+  overflow: hidden;
+  border-radius: 14px 0 0 14px;
+  /* Solo redondea las esquinas IZQUIERDAS.
+     Sintaxis border-radius: top-left top-right bottom-right bottom-left
+     14px 0 0 14px = izquierda redondeada, derecha cuadrada */
+}
+
+.modal_producto__foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  /* display: block en imágenes quita un pequeño espacio
+     que los navegadores agregan debajo de imágenes inline */
+  filter: sepia(10%);
+}
+
+/* Info del lado derecho */
+.modal_producto__info {
+  width: 55%;
+  /* El 55% restante */
+  padding: 2rem 1.8rem;
+  display: flex;
+  flex-direction: column;
+  /* Apila: etiqueta, nombre, precio, descripción, tallas, botón */
+  gap: 0.8rem;
+  /* 12.8px entre cada elemento hijo */
+}
+
+.modal_producto__etiqueta {
+  /* Pequeño texto arriba, ej: "Hombres · 70s" */
+  font-size: 0.7rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.modal_producto__nombre {
+  font-family: var(--fuente);
+  font-size: 1.6rem;
+  color: var(--saddle);
+  line-height: 1.2;
+  /* line-height = interlineado. 1.2 = 1.2 veces el tamaño de fuente.
+     Evita que las líneas queden muy juntas o muy separadas */
+}
+
+.modal_producto__precio {
+  font-size: 1.4rem;
+  color: var(--brick);
+  font-weight: 700;
+}
+
+.modal_producto__descripcion {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  /* Más espacio entre líneas para el texto descriptivo largo */
+  color: var(--darkbrown);
+  opacity: 0.8;
+}
+
+/* Título "Selecciona tu talla:" */
+.modal_producto__tallas_titulo {
+  font-size: 0.72rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--saddle);
+}
+
+/* Fila de cuadritos de talla */
+.modal_producto__tallas {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  /* flex-wrap: wrap = si no caben en una fila, bajan a la siguiente */
+}
+
+/* Cada cuadrito de talla (XS, S, M, L, XL) */
+.talla {
+  width: 40px;
+  height: 40px;
+  /* Cuadrado de 40x40px */
+
+  border: 1.5px solid var(--saddle);
+  border-radius: 6px;
+  /* Esquinas ligeramente redondeadas, pero no círculo */
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Centra el texto (XS, S, M, etc.) dentro del cuadrito */
+
+  font-size: 0.8rem;
+  color: var(--saddle);
+
+  transition: background 0.2s, color 0.2s;
+}
+
+/* Estado al hacer hover O cuando JS agrega .seleccionada */
+.talla:hover,
+.talla.seleccionada {
+  background: var(--saddle);
+  /* Fondo se llena de marrón */
+  color: var(--cream);
+  /* Texto se vuelve crema */
+}
+
+/* Contenedor de los botones del modal */
+.modal_producto__btns {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  margin-top: auto;
+  /* auto en un flex column empuja este elemento al FONDO.
+     El botón siempre está en la parte de abajo de la info */
+  padding-top: 1rem;
+}
+
+/* Botón "Agregar al carrito" */
+.btn_agregar_carrito {
+  flex: 1;
+  /* Ocupa todo el espacio disponible en la fila de botones */
+  padding: 0.85rem;
+  background: var(--saddle);
+  color: var(--cream);
+  border: none;
+  border-radius: 6px;
+  font-family: var(--fuente);
+  font-size: 0.85rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.25s;
+}
+.btn_agregar_carrito:hover { background: var(--brick); }
+
+/* Cuando JS agrega .agregado, el botón se vuelve verde
+   para confirmar visualmente que se agregó al carrito */
+.btn_agregar_carrito.agregado {
+  background: #2a7a2a;
+  /* Verde oscuro = confirmación exitosa.
+     Usamos hexadecimal porque no hay nombre en inglés
+     para este verde específico */
+}
+
+/* Botón X en la esquina superior derecha del modal */
+.btn_modal_cerrar {
+  position: absolute;
+  /* Relativo a .modal_producto__caja (que tiene position: relative) */
+  top: 14px;
+  right: 14px;
+  background: rgba(42, 26, 14, 0.08);
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+  color: var(--darkbrown);
+}
+.btn_modal_cerrar:hover { background: rgba(42, 26, 14, 0.18); }
+
+/* RESPONSIVE: en pantallas pequeñas (600px o menos),
+   la foto y la info se apilan verticalmente en lugar de
+   estar lado a lado */
+@media (max-width: 600px) {
+  /* @media es una "consulta de medios". Aplica los estilos
+     SOLO cuando la condición es verdadera.
+     max-width: 600px = "si la pantalla mide 600px o menos" */
+
+  .modal_producto__foto {
+    width: 100%;
+    /* En móvil, la foto ocupa todo el ancho */
+    min-height: 220px;
+    /* Menos alta para dejar espacio a la info abajo */
+    border-radius: 14px 14px 0 0;
+    /* Ahora solo las esquinas SUPERIORES están redondeadas */
+  }
+  .modal_producto__info {
+    width: 100%;
+    /* La info también ocupa todo el ancho */
+  }
+}
+/* MODAL DE PRODUCTO — termina aquí */
+
+
+/* ================================================================
+   CARRITO VISUAL — desde aquí
+   
+   Compuesto por 3 partes:
+   1. Botón flotante (esquina inferior derecha) con contador
+   2. Panel lateral deslizante con los productos
+   3. Footer del panel: total + botón de WhatsApp
+================================================================ */
+
+/* 1. BOTÓN FLOTANTE */
+.btn_carrito_flotante {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  /* Esquina inferior derecha, siempre visible */
+
+  z-index: 150;
+  /* Encima del contenido pero debajo del modal (100) y panel (200) */
+
+  background: var(--saddle);
+  color: var(--cream);
+  border: none;
+  border-radius: 50%;
+  /* Círculo */
+
+  width: 56px;
+  height: 56px;
+  /* Cuadrado de 56px + border-radius 50% = círculo de 56px */
+
+  font-size: 1.4rem;
+  /* Tamaño del ícono 🛍 */
+
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  /* Sombra pronunciada para que "flote" visualmente */
+
+  transition: background 0.25s, transform 0.2s;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Centra el ícono dentro del círculo */
+}
+
+.btn_carrito_flotante:hover {
+  background: var(--brick);
+  transform: scale(1.08);
+  /* Crece 8% al hacer hover. Sutil pero visible */
+}
+
+/* Número rojo que indica cuántos productos hay en el carrito */
+.carrito_contador {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  /* Sale un poco fuera del botón (esquina superior derecha) */
+
+  background: var(--brick);
+  color: var(--white);
+  font-size: 0.7rem;
+  font-weight: 700;
+
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  /* Pequeño círculo rojo */
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carrito_contador.oculto {
+  display: none;
+  /* Cuando el carrito está vacío, JS agrega .oculto
+     y el contador desaparece. display: none elimina el elemento
+     del flujo visual completamente */
+}
+
+/* 2. PANEL LATERAL DEL CARRITO */
+.panel_carrito {
+  position: fixed;
+  top: 0;
+  right: 0;
+  /* Pegado a la derecha de la pantalla */
+
+  width: 340px;
+  height: 100%;
+
+  background: var(--cream);
+  z-index: 200;
+  /* Encima de todo, incluso del modal */
+
+  transform: translateX(100%);
+  /* Se esconde fuera de pantalla a la DERECHA.
+     100% de SU ancho = 340px hacia la derecha */
+
+  transition: transform var(--velocidad) ease;
+
+  display: flex;
+  flex-direction: column;
+  /* Los 3 bloques (header, lista, footer) se apilan verticalmente */
+
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
+  /* Sombra a la IZQUIERDA del panel (-4px en X).
+     Cuando el panel aparece, la sombra indica que está
+     encima del contenido de la página */
+}
+
+.panel_carrito.abierto {
+  transform: translateX(0);
+  /* Entra a pantalla desde la derecha */
+}
+
+/* Cabecera del panel: "Mi Carrito" + botón X */
+.panel_carrito__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem;
+  border-bottom: 2px solid var(--gold);
+  background: var(--saddle);
+  /* Fondo marrón = consistente con la barra superior */
+}
+
+.panel_carrito__titulo {
+  font-family: var(--fuente);
+  font-size: 1.2rem;
+  color: var(--cream);
+  letter-spacing: 2px;
+}
+
+.btn_cerrar_carrito {
+  background: none;
+  border: none;
+  color: var(--cream);
+  font-size: 1.2rem;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+.btn_cerrar_carrito:hover { opacity: 1; }
+
+/* Lista donde aparecen los productos */
+.panel_carrito__lista {
+  flex: 1;
+  /* Ocupa todo el espacio entre el header y el footer.
+     Si hay muchos productos, esta área hace scroll */
+
+  overflow-y: auto;
+  /* scroll vertical si el contenido supera la altura */
+
+  padding: 1rem;
+}
+
+/* Texto "Tu carrito está vacío" */
+.carrito_vacio {
+  text-align: center;
+  color: var(--darkbrown);
+  opacity: 0.4;
+  /* Muy tenue, es texto secundario */
+  padding: 3rem 1rem;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+}
+
+/* Cada producto dentro del carrito */
+.carrito_item {
+  display: flex;
+  align-items: center;
+  /* Alinea la foto, info y botón X en la misma línea */
+  gap: 0.8rem;
+
+  padding: 0.8rem 0;
+  border-bottom: 1px solid rgba(139, 69, 19, 0.12);
+  /* Línea separadora sutil entre productos */
+
+  animation: aparecer 0.3s ease;
+  /* Cuando JS agrega un item, se anima con @keyframes aparecer */
+}
+
+/* La animación "aparecer" para los items del carrito */
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+    /* Empieza invisible y 20px a la derecha */
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+    /* Termina visible en su posición normal */
+  }
+}
+/* El resultado: cada item "vuela" desde la derecha al aparecer */
+
+/* Foto miniatura del producto en el carrito */
+.carrito_item__foto {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+  /* flex-shrink: 0 = no se encoge aunque el espacio sea limitado.
+     Sin esto, la foto podría achicarse en pantallas pequeñas */
+  border: 1px solid rgba(139, 69, 19, 0.15);
+}
+.carrito_item__foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Nombre, talla y precio del producto en el carrito */
+.carrito_item__info {
+  flex: 1;
+  /* Ocupa todo el espacio entre la foto y el botón X */
+}
+
+.carrito_item__nombre {
+  font-size: 0.88rem;
+  color: var(--saddle);
+  font-family: var(--fuente);
+  margin-bottom: 2px;
+}
+
+.carrito_item__talla {
+  font-size: 0.75rem;
+  color: var(--darkbrown);
+  opacity: 0.6;
+  letter-spacing: 1px;
+}
+
+.carrito_item__precio {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--brick);
+}
+
+/* Botón X para quitar un producto */
+.carrito_item__quitar {
+  background: none;
+  border: none;
+  color: var(--darkbrown);
+  opacity: 0.3;
+  /* Muy tenue para no distraer */
+  cursor: pointer;
+  font-size: 1rem;
+  transition: opacity 0.2s;
+  flex-shrink: 0;
+}
+.carrito_item__quitar:hover { opacity: 0.8; }
+
+/* 3. FOOTER DEL PANEL: total + botón WhatsApp */
+.panel_carrito__footer {
+  padding: 1.2rem 1.5rem;
+  border-top: 2px solid var(--gold);
+  background: var(--cream2);
+  /* Fondo ligeramente diferente para distinguir el footer del panel */
+}
+
+/* Fila "Total: S/ 200" */
+.panel_carrito__total {
+  display: flex;
+  justify-content: space-between;
+  /* "Total:" a la izquierda, el número a la derecha */
+  align-items: center;
+  font-family: var(--fuente);
+  font-size: 1rem;
+  color: var(--saddle);
+  margin-bottom: 1rem;
+}
+
+.panel_carrito__total span:last-child {
+  /* El segundo span (el número) */
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--brick);
+  /* Rojo para que el total destaque */
+}
+
+/* Botón verde de WhatsApp para hacer el pedido */
+.btn_whatsapp_pedido {
+  display: block;
+  width: 100%;
+  padding: 0.85rem;
+  background: #25D366;
+  /* Verde oficial de WhatsApp */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--fuente);
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.25s;
+  text-decoration: none;
+  /* Es un <a>, quitamos el subrayado */
+}
+.btn_whatsapp_pedido:hover { background: #1ebe57; color: white; }
+/* CARRITO VISUAL — termina aquí */
+
+
+/* ================================================================
+   TOAST (notificación flotante)
+   
+   QUÉ ES UN TOAST:
+   Un mensaje pequeño que aparece brevemente en la esquina,
+   confirma una acción y desaparece solo.
+   Se llama "toast" porque aparece desde abajo como una tostada
+   saliendo de la tostadora.
+================================================================ */
+.toast_carrito {
+  position: fixed;
+  bottom: 5.5rem;
+  right: 2rem;
+  /* Un poco más arriba que el botón flotante del carrito */
+
+  background: var(--darkbrown);
+  color: var(--cream);
+  padding: 0.8rem 1.2rem;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  letter-spacing: 1px;
+  z-index: 180;
+  border-left: 3px solid var(--gold);
+  /* Acento dorado a la izquierda, lo hace reconocible */
+
+  /* Estado inicial: escondido debajo */
+  transform: translateY(60px);
+  opacity: 0;
+  /* Está abajo e invisible */
+
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  pointer-events: none;
+  /* No debe recibir clicks */
+}
+
+/* JS agrega .visible para que suba y aparezca */
+.toast_carrito.visible {
+  transform: translateY(0);
+  opacity: 1;
+  /* Sube a su posición y se vuelve visible.
+     La combinación de translate + opacity da el efecto
+     de "tostada saliendo" */
+}
+
+
+/* ================================================================
+   FOOTER — desde aquí
+   
+   DECISIÓN DE DISEÑO:
+   El footer es igual en todas las páginas.
+   En lugar de copiar y pegar el HTML en cada archivo,
+   JS lo genera dinámicamente desde app.js con innerHTML.
+   Si necesitas cambiar el teléfono, lo cambias en UN solo lugar.
+================================================================ */
 .pie_pagina {
   background: var(--darkbrown);
-  color: rgba(245,239,230,0.45);
-  text-align: center; padding: 1.5rem;
-  font-size: 0.82rem; letter-spacing: 1px;
   border-top: 2px solid var(--gold);
+  padding: 3rem 0 1.5rem;
+  /* 48px arriba, 0 a los lados (el grid tiene su propio padding),
+     24px abajo */
+  font-family: var(--fuente);
 }
-.pie_pagina a { color: var(--gold); }
-.pie_pagina a:hover { color: var(--cream); }
 
-/* ================================================
-   SLIDER (solo index)
-================================================ */
-.seccion_slider { padding-top: 64px; background: var(--saddle); }
-.carrusel_contenedor {
-  position: relative; width: 100%; height: 440px;
-  display: flex; align-items: center; justify-content: center;
-  perspective: 1000px; overflow: hidden;
+/* Grid de 4 columnas */
+.pie_pagina__grid {
+  max-width: 1100px;
+  /* Ancho máximo del contenido del footer */
+  margin: 0 auto;
+  /* margin: 0 auto centra un elemento de bloque.
+     Los márgenes laterales se reparten automáticamente */
+
+  padding: 0 1.5rem 2rem;
+
+  display: grid;
+  /* CSS Grid = sistema de layout en 2 dimensiones (filas y columnas).
+     Diferencia con Flexbox: Grid = 2D, Flex = 1D */
+
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  /* Esto es magia CSS para hacer un grid responsive sin media queries.
+     
+     Desglose:
+     repeat() = repite un patrón
+     auto-fit = crea tantas columnas como quepan en el ancho
+     minmax(180px, 1fr) = cada columna mide mínimo 180px y máximo 1fr
+     
+     fr = fracción del espacio disponible
+     1fr = 1 parte del total
+     
+     Resultado:
+     - Desktop (1100px): caben 4 columnas de ~250px
+     - Tablet (600px): caben 3 columnas de ~180px
+     - Móvil (360px): cabe 1 columna de 100%
+     
+     Todo automático, sin una sola @media query */
+
+  gap: 2.5rem;
+  /* 40px entre columnas y filas */
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  /* Línea sutil antes del copyright */
 }
-.carrusel { position: relative; width: 640px; height: 390px; transform-style: preserve-3d; }
+
+/* Título de cada columna del footer */
+.pie_pagina__col_titulo {
+  font-size: 0.78rem;
+  color: var(--gold);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  display: block;
+  /* display: block para que ocupe su propia línea
+     y el margin-bottom funcione correctamente */
+}
+
+/* Links y textos dentro de cada columna */
+.pie_pagina__col p,
+.pie_pagina__col a {
+  /* Afectamos a <p> y <a> dentro de .pie_pagina__col
+     con una sola regla (separados por coma) */
+  display: block;
+  font-size: 0.82rem;
+  color: rgba(245, 239, 230, 0.5);
+  /* crema al 50% de opacidad = discreto */
+  margin-bottom: 0.6rem;
+  letter-spacing: 1px;
+  transition: color 0.2s;
+  line-height: 1.5;
+}
+.pie_pagina__col a:hover { color: var(--gold); }
+
+/* Fila de botones de redes sociales */
+.pie_pagina__redes {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+/* Cada botón de red social */
+.pie_pagina__red {
+  padding: 0.35rem 0.8rem;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+  font-family: var(--fuente);
+  transition: opacity 0.2s;
+  display: inline-flex;
+  align-items: center;
+  /* inline-flex = flex pero como elemento inline.
+     Permite que varios botones estén en la misma línea */
+  gap: 5px;
+  /* Espacio entre el ícono emoji y el texto */
+}
+.pie_pagina__red:hover { opacity: 0.85; }
+
+/* Colores oficiales de cada red social */
+.pie_pagina__red.wa { background: #25D366; color: white; }
+.pie_pagina__red.ig { background: #E1306C; color: white; }
+.pie_pagina__red.fb { background: #1877F2; color: white; }
+.pie_pagina__red.tk { background: #111;    color: white; }
+
+/* Copyright al pie */
+.pie_pagina__copy {
+  text-align: center;
+  font-size: 0.76rem;
+  color: rgba(245, 239, 230, 0.28);
+  /* Muy tenue, es texto legal */
+  letter-spacing: 1px;
+  padding: 1.5rem 1.5rem 0;
+}
+/* FOOTER — termina aquí */
+
+
+/* ================================================================
+   SLIDER 3D — desde aquí
+   
+   CONCEPTO CLAVE:
+   Todas las diapositivas están apiladas en el mismo lugar.
+   JS les asigna una de 4 clases: activa, anterior, siguiente, oculta.
+   Cada clase tiene un transform diferente que las mueve/rota.
+   CSS anima el cambio automáticamente gracias a transition.
+================================================================ */
+.seccion_slider {
+  padding-top: 64px;
+  /* Empuja el slider 64px hacia abajo = alto del header fijo.
+     Sin esto el header taparía la parte superior del slider */
+  background: var(--saddle);
+}
+
+.carrusel_contenedor {
+  position: relative;
+  width: 100%;
+  height: 440px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Centra el .carrusel dentro del contenedor */
+
+  perspective: 1000px;
+  /* perspective activa el espacio 3D para los hijos.
+     
+     SIN perspective: rotateY(28deg) se ve como si el elemento
+     simplemente se achicara (se ve plano, sin profundidad).
+     
+     CON perspective: rotateY(28deg) se ve como si el elemento
+     realmente se rotara en el espacio (con profundidad real).
+     
+     1000px = distancia del "ojo" del espectador al elemento.
+     Menor número = efecto más dramático/distorsionado.
+     Mayor número = efecto más sutil/suave */
+
+  overflow: hidden;
+  /* Esconde los slides que se van hacia los costados.
+     Sin esto se verían las diapositivas fuera del contenedor */
+}
+
+.carrusel {
+  position: relative;
+  width: 640px;
+  height: 390px;
+
+  transform-style: preserve-3d;
+  /* preserve-3d le dice al navegador:
+     "los hijos de este elemento también viven en el mismo
+     espacio 3D que su padre".
+     Sin esto, los hijos se "aplanan" y el efecto 3D no funciona.
+     
+     Analogía: es como abrir un libro en 3D.
+     Sin preserve-3d, las páginas se quedan planas.
+     Con preserve-3d, las páginas realmente se abren en el espacio */
+}
+
+/* Cada diapositiva */
 .diapositiva {
-  position: absolute; inset: 0; border-radius: 12px; overflow: hidden;
+  position: absolute;
+  inset: 0;
+  /* Todas las diapositivas ocupan exactamente el mismo espacio
+     (todo el .carrusel). Se apilan unas sobre otras.
+     JS las separará visualmente con transform */
+
+  border-radius: 12px;
+  overflow: hidden;
+
   transition: transform 0.65s ease, opacity 0.65s ease;
+  /* Cuando JS cambia la clase (y por tanto el transform y opacity),
+     el cambio se anima en 0.65s.
+     ease = aceleración al inicio, desaceleración al final */
+
   border: 2px solid var(--gold);
 }
-.diapositiva img { width: 100%; height: 100%; object-fit: cover; display: block; filter: sepia(20%); }
+
+.diapositiva img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: sepia(20%);
+}
+
+/* Texto en la parte inferior de cada diapositiva */
 .diapositiva__texto {
-  position: absolute; bottom: 0; left: 0; right: 0;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
   padding: 1.2rem 1.5rem;
-  background: linear-gradient(transparent, rgba(42,26,14,0.85));
-  font-family: 'Playfair Display', serif; font-size: 1.6rem;
-  color: var(--cream); letter-spacing: 2px;
-}
-.diapositiva.activa  { transform: translateX(0) scale(1); opacity: 1; z-index: 3; }
-.diapositiva.anterior { transform: translateX(-500px) scale(0.72) rotateY(28deg); opacity: 0.5; z-index: 2; }
-.diapositiva.siguiente { transform: translateX(500px) scale(0.72) rotateY(-28deg); opacity: 0.5; z-index: 2; }
-.diapositiva.oculta  { opacity: 0; z-index: 1; }
 
+  background: linear-gradient(transparent, rgba(42, 26, 14, 0.85));
+  /* gradient = degradado de colores.
+     Aquí va de completamente transparente (arriba)
+     a marrón oscuro casi opaco (abajo).
+     Esto hace que el texto sea legible sin tapar la imagen */
+
+  font-family: var(--fuente);
+  font-size: 1.6rem;
+  color: var(--cream);
+  letter-spacing: 2px;
+}
+
+/* ---- Los 4 estados de las diapositivas ---- */
+
+.diapositiva.activa {
+  transform: translateX(0) scale(1);
+  /* Sin movimiento, tamaño normal */
+  opacity: 1;
+  /* Completamente visible */
+  z-index: 3;
+  /* Encima de todos los demás slides */
+}
+
+.diapositiva.anterior {
+  transform: translateX(-500px) scale(0.72) rotateY(28deg);
+  /* translateX(-500px) = 500px a la izquierda
+     scale(0.72) = encoge al 72%, simula estar más lejos
+     rotateY(28deg) = gira 28° en el eje Y (perpendicular a la pantalla)
+     
+     El resultado: el slide de la izquierda parece estar
+     detrás y angled, dando profundidad 3D */
+  opacity: 0.5;
+  z-index: 2;
+}
+
+.diapositiva.siguiente {
+  transform: translateX(500px) scale(0.72) rotateY(-28deg);
+  /* Espejo exacto del anterior, pero a la derecha.
+     -28deg = gira en dirección opuesta */
+  opacity: 0.5;
+  z-index: 2;
+}
+
+.diapositiva.oculta {
+  opacity: 0;
+  /* Las demás diapositivas simplemente son invisibles.
+     Están en el DOM pero no se ven */
+  z-index: 1;
+}
+
+/* Botones de navegación < y > */
 .btn_anterior, .btn_siguiente {
-  position: absolute; top: 50%; transform: translateY(-50%); z-index: 10;
-  background: rgba(218,165,32,0.15); border: 1px solid var(--gold);
-  color: var(--cream); font-size: 1.2rem;
-  width: 42px; height: 42px; border-radius: 50%; cursor: pointer; transition: background 0.3s;
-}
-.btn_anterior:hover, .btn_siguiente:hover { background: var(--gold); color: var(--darkbrown); }
-.btn_anterior { left: 1rem; } .btn_siguiente { right: 1rem; }
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  /* TRUCO CLÁSICO PARA CENTRAR VERTICALMENTE:
+     top: 50% = la esquina superior del botón en el centro.
+     translateY(-50%) = sube el botón 50% de su propia altura.
+     El resultado: el CENTRO del botón está en el centro de la pantalla.
+     Sin translateY(-50%), el botón quedaría visualmente más abajo */
 
-.puntos { position: absolute; bottom: 14px; display: flex; gap: 8px; z-index: 10; }
+  z-index: 10;
+  background: rgba(218, 165, 32, 0.15);
+  border: 1px solid var(--gold);
+  color: var(--cream);
+  font-size: 1.2rem;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.btn_anterior:hover, .btn_siguiente:hover {
+  background: var(--gold);
+  color: var(--darkbrown);
+}
+.btn_anterior { left: 1rem; }
+.btn_siguiente { right: 1rem; }
+
+/* Puntitos de navegación */
+.puntos {
+  position: absolute;
+  bottom: 14px;
+  /* 14px del borde inferior del carrusel_contenedor */
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+}
+
 .punto {
-  width: 8px; height: 8px; border-radius: 50%;
-  background: rgba(255,240,200,0.3); cursor: pointer;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  /* Círculo pequeño */
+  background: rgba(255, 240, 200, 0.3);
+  /* Crema muy transparente = apagado */
+  cursor: pointer;
   transition: background 0.3s, transform 0.3s;
+  /* Animamos el color y el tamaño */
 }
-.punto.activo { background: var(--gold); transform: scale(1.4); }
 
-/* ================================================
-   HERO BANNER (páginas internas: varones, mujeres, promos)
-   Reemplaza al slider en las subpáginas
-================================================ */
+.punto.activo {
+  background: var(--gold);
+  /* El puntito del slide activo = dorado */
+  transform: scale(1.4);
+  /* Y un poco más grande. scale(1.4) = 40% más grande */
+}
+/* SLIDER 3D — termina aquí */
+
+
+/* ================================================================
+   HERO BANNER — desde aquí
+   
+   QUÉ ES:
+   El banner de cabecera de las páginas internas.
+   En index.html está el slider. En las demás páginas
+   (varones, mujeres, etc.) este banner más simple reemplaza al slider.
+================================================================ */
 .hero_banner {
   padding-top: 64px;
-  height: 320px;
+  /* Empuja abajo del header fijo */
+  height: 300px;
   background: var(--saddle);
-  display: flex; align-items: center; justify-content: center;
-  flex-direction: column; gap: 0.5rem;
-  position: relative; overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0.5rem;
+  position: relative;
+  overflow: hidden;
 }
+
 .hero_banner::before {
-  /* Textura sutil de puntos */
+  /* ::before = pseudo-elemento que se crea ANTES del contenido.
+     
+     Lo usamos para crear una textura de puntitos sin HTML extra.
+     Solo con CSS creamos un patrón visual decorativo.
+     
+     Ventaja: no agrega elementos al HTML = código más limpio */
+
   content: '';
-  position: absolute; inset: 0;
-  background-image: radial-gradient(rgba(218,165,32,0.15) 1px, transparent 1px);
+  /* Obligatorio para pseudo-elementos */
+
+  position: absolute;
+  inset: 0;
+  /* Cubre todo el .hero_banner */
+
+  background-image: radial-gradient(rgba(218, 165, 32, 0.12) 1px, transparent 1px);
+  /* radial-gradient crea un degradado circular.
+     Aquí: cada gradiente es un punto de 1px dorado (12% opaco)
+     sobre fondo transparente */
+
   background-size: 20px 20px;
+  /* Cada "tile" del patrón mide 20px x 20px.
+     El punto de 1px se repite cada 20px = textura de puntitos */
 }
+
 .hero_banner__titulo {
-  font-family: 'Playfair Display', serif;
-  font-size: 3.5rem; color: var(--cream);
-  letter-spacing: 6px; position: relative;
+  font-family: var(--fuente);
+  font-size: 3.2rem;
+  /* Grande e impactante */
+  color: var(--cream);
+  letter-spacing: 6px;
+  position: relative;
+  /* position: relative aquí hace que el título quede
+     ENCIMA del ::before (la textura de puntitos).
+     Sin esto el ::before taparía el texto */
 }
+
 .hero_banner__subtitulo {
-  font-size: 0.85rem; color: var(--gold);
-  letter-spacing: 4px; text-transform: uppercase; position: relative;
+  font-size: 0.82rem;
+  color: var(--gold);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  position: relative;
 }
-/* Línea decorativa dorada debajo del título del banner */
+
 .hero_banner__linea {
-  width: 60px; height: 2px; background: var(--gold);
-  position: relative; margin-top: 0.5rem;
+  width: 60px;
+  height: 2px;
+  background: var(--gold);
+  /* Pequeña línea decorativa dorada debajo del subtítulo */
+  position: relative;
+  margin-top: 0.5rem;
 }
+/* HERO BANNER — termina aquí */
 
-/* ================================================
-   SECCIÓN CATÁLOGO (varones.html y mujeres.html)
-================================================ */
-.seccion_catalogo {
-  padding: 4rem 0;
-  background: var(--cream);
-}
 
-/* ================================================
-   SECCIÓN PROMOCIONES
-================================================ */
-.seccion_promos {
-  padding: 4rem 0;
-  background: var(--cream2);
-}
-/* Banner de cuenta regresiva en promos */
+/* ================================================================
+   SECCIONES DE CONTENIDO
+   Estilos para los contenedores de las tarjetas de productos.
+================================================================ */
+.seccion_varones  { padding: 4rem 0; background: var(--cream); }
+.seccion_mujeres  { padding: 4rem 0; background: var(--cream2); }
+/* Fondo ligeramente diferente entre secciones para separación visual */
+.seccion_catalogo { padding: 4rem 0; background: var(--cream); }
+.seccion_promos   { padding: 4rem 0; background: var(--cream2); }
+
+/* Banner rojo de alerta en la página de promociones */
 .banner_promo {
   background: var(--brick);
   color: var(--white);
@@ -293,89 +2076,170 @@ a { text-decoration: none; }
   font-size: 0.9rem;
   letter-spacing: 2px;
   text-transform: uppercase;
-  margin-top: 64px; /* debajo del header fijo */
+  margin-top: 64px;
+  /* Empuja debajo del header fijo */
 }
 
-/* ================================================
-   SECCIÓN UBICANOS
-================================================ */
-.seccion_ubicanos {
-  padding: 4rem 0;
-  background: var(--cream);
+/* Botón para ir al catálogo completo */
+.btn_ver_catalogo {
+  display: inline-block;
+  /* inline-block = se comporta como texto (se queda en su línea)
+     pero acepta width, height, margin, padding como un bloque */
+  margin-top: 2rem;
+  padding: 0.75rem 2.5rem;
+  border: 2px solid var(--saddle);
+  color: var(--saddle);
+  font-family: var(--fuente);
+  font-size: 0.85rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border-radius: 4px;
+  transition: background 0.25s, color 0.25s;
 }
+.btn_ver_catalogo:hover {
+  background: var(--saddle);
+  color: var(--cream);
+}
+/* Versión dorada del botón (con clase .gold en el HTML) */
+.btn_ver_catalogo.gold {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.btn_ver_catalogo.gold:hover {
+  background: var(--gold);
+  color: var(--darkbrown);
+}
+
+
+/* ================================================================
+   PÁGINA UBÍCANOS — desde aquí
+================================================================ */
+.seccion_ubicanos { padding: 4rem 0; background: var(--cream); }
+
 /* Contenedor del mapa de Google */
 .mapa_contenedor {
   border-radius: 12px;
   overflow: hidden;
+  /* overflow: hidden para que el mapa respete las esquinas redondeadas */
   border: 2px solid var(--gold);
   height: 380px;
 }
-.mapa_contenedor iframe { width: 100%; height: 100%; border: none; }
+.mapa_contenedor iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  /* Los iframes tienen un borde por defecto. Esto lo quita */
+}
 
-/* Tarjeta de info de contacto */
+/* Caja marrón con los datos de contacto */
 .info_contacto {
   background: var(--saddle);
-  border-radius: 12px; padding: 2rem;
-  color: var(--cream); height: 100%;
+  border-radius: 12px;
+  padding: 2rem;
+  color: var(--cream);
+  height: 100%;
+  /* 100% = misma altura que el mapa (cuando Bootstrap los pone lado a lado) */
 }
+
+/* Cada fila de info (ícono + texto) */
 .info_contacto__item {
-  display: flex; align-items: flex-start; gap: 1rem;
-  padding: 1rem 0; border-bottom: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  align-items: flex-start;
+  /* flex-start = alinea al inicio (arriba).
+     Si el texto ocupa varias líneas, el ícono queda arriba */
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 .info_contacto__item:last-child { border-bottom: none; }
-.info_contacto__icono { font-size: 1.3rem; min-width: 28px; }
-.info_contacto__texto p { font-size: 0.85rem; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 2px; }
-.info_contacto__texto span { font-size: 0.95rem; }
+/* :last-child = al último elemento de la lista.
+   Quitamos el borde del último item */
 
-/* Redes sociales */
+.info_contacto__icono {
+  font-size: 1.3rem;
+  min-width: 28px;
+  /* min-width garantiza que el ícono siempre tenga su espacio,
+     aunque el texto del lado sea muy largo */
+}
+
+.info_contacto__texto p {
+  /* El título (ej: "Dirección", "WhatsApp") */
+  font-size: 0.75rem;
+  color: var(--gold);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+.info_contacto__texto span {
+  /* El contenido (ej: "Jr. de la Unión 450") */
+  font-size: 0.9rem;
+}
+
+/* Título "Síguenos" en ubícanos */
 .redes_titulo {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.4rem; color: var(--saddle);
+  font-family: var(--fuente);
+  font-size: 1.4rem;
+  color: var(--saddle);
   margin: 2.5rem 0 1.2rem;
   padding-bottom: 0.4rem;
   border-bottom: 2px solid var(--gold);
   display: inline-block;
 }
+
+/* Grid 2x2 para las redes sociales */
 .redes_grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+  /* 2 columnas iguales. 1fr = 1 fracción del espacio total.
+     Cada columna ocupa la mitad del ancho disponible */
   gap: 1rem;
 }
-.red_social {
-  display: flex; align-items: center; gap: 0.8rem;
-  padding: 1rem 1.2rem; border-radius: 10px;
-  text-decoration: none; font-weight: 700;
-  font-size: 0.9rem; letter-spacing: 1px;
-  transition: transform 0.2s, opacity 0.2s;
-}
-.red_social:hover { transform: translateY(-3px); opacity: 0.9; }
-.red_social__icono { font-size: 1.5rem; }
 
+/* Cada botón de red social */
+.red_social {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.8rem 1.2rem;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  transition: transform 0.2s, opacity 0.2s;
+  font-family: var(--fuente);
+}
+.red_social:hover {
+  transform: translateY(-3px);
+  /* Sube 3px al hacer hover */
+  opacity: 0.9;
+}
+.red_social__icono { font-size: 1.2rem; }
+
+/* Colores de cada red */
 .red_whatsapp  { background: #25D366; color: white; }
 .red_instagram { background: #E1306C; color: white; }
 .red_facebook  { background: #1877F2; color: white; }
-.red_tiktok    { background: #010101; color: white; }
+.red_tiktok    { background: #111;    color: white; }
+/* PÁGINA UBÍCANOS — termina aquí */
 
-/* ================================================
-   PÁGINA CONTACTO INDEPENDIENTE
-================================================ */
-.seccion_contacto_pagina {
-  padding: 4rem 0;
-  background: var(--cream);
-}
 
-/* Etiqueta sobre cada campo */
+/* ================================================================
+   PÁGINA CONTACTO — desde aquí
+================================================================ */
+.seccion_contacto_pagina { padding: 4rem 0; background: var(--cream); }
+
+/* Etiqueta encima de cada campo del formulario */
 .campo_etiqueta {
   display: block;
   color: var(--saddle);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 1px;
   text-transform: uppercase;
   margin-bottom: 0.4rem;
 }
 
-/* Checkbox personalizado */
+/* Fila del checkbox de términos */
 .campo_check {
   display: flex;
   align-items: flex-start;
@@ -385,34 +2249,68 @@ a { text-decoration: none; }
   opacity: 0.75;
 }
 .campo_check input[type="checkbox"] {
+  /* Selecciona solo los input de tipo checkbox */
   margin-top: 3px;
-  accent-color: var(--saddle); /* color del checkbox */
-  width: 16px; height: 16px;
+  /* Alinea el checkbox con la primera línea del texto */
+  accent-color: var(--saddle);
+  /* accent-color cambia el color del checkbox al hacer check.
+     Por defecto es azul del navegador. Aquí lo ponemos marrón */
+  width: 16px;
+  height: 16px;
   flex-shrink: 0;
 }
 
-/* Campos en la página de contacto son oscuros sobre crema */
-.seccion_contacto_pagina .campo {
+/* Los campos del formulario (input, select, textarea) */
+.campo {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
   background: var(--white);
-  border: 1.5px solid rgba(139,69,19,0.25);
+  border: 1.5px solid rgba(139, 69, 19, 0.2);
+  /* Borde marrón sutil */
+  border-radius: 6px;
   color: var(--darkbrown);
+  font-family: var(--fuente);
+  font-size: 0.95rem;
+  outline: none;
+  /* outline es el borde azul que aparece cuando el campo
+     está activo (focused). "none" lo elimina.
+     Lo reemplazamos con nuestro propio borde en :focus */
+  transition: border-color 0.2s;
 }
-.seccion_contacto_pagina .campo::placeholder { color: rgba(42,26,14,0.35); }
-.seccion_contacto_pagina .campo:focus { border-color: var(--saddle); }
+.campo::placeholder {
+  /* ::placeholder estiliza el texto de ayuda
+     (ej: "Escribe tu nombre...") que desaparece al escribir */
+  color: rgba(42, 26, 14, 0.3);
+  /* Marrón muy transparente = casi gris */
+}
+.campo:focus {
+  /* :focus = cuando el campo está seleccionado (el cursor está dentro).
+     Al hacer click en un campo o presionar Tab para ir a él */
+  border-color: var(--saddle);
+  /* El borde se vuelve marrón más notorio al escribir */
+}
 
-/* Botón enviar en página de contacto */
-.seccion_contacto_pagina .btn_enviar {
-  background: var(--saddle);
-  color: var(--cream);
+/* Botón de enviar el formulario */
+.btn_enviar {
   padding: 0.85rem 3rem;
+  background: var(--saddle);
+  border: none;
+  color: var(--cream);
+  font-family: var(--fuente);
   font-size: 1rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.25s;
 }
-.seccion_contacto_pagina .btn_enviar:hover {
-  background: var(--brick);
-  color: var(--white);
-}
+.btn_enviar:hover { background: var(--brick); color: var(--white); }
 
-/* Mensaje de éxito post-envío */
+/* Caja verde de éxito que aparece DESPUÉS de enviar el formulario.
+   Empieza con .oculto (display: none).
+   JS quita .oculto cuando se envía el form */
 .form_exitoso {
   background: var(--saddle);
   border-radius: 12px;
@@ -420,16 +2318,29 @@ a { text-decoration: none; }
   text-align: center;
   color: var(--cream);
   animation: aparecer 0.5s ease;
+  /* Se anima con @keyframes aparecer al aparecer */
 }
 .form_exitoso.oculto { display: none; }
-.form_exitoso__icono { font-size: 2.5rem; color: var(--gold); margin-bottom: 1rem; }
-.form_exitoso h3 {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.6rem; margin-bottom: 0.8rem;
+
+/* La animación para el mensaje de éxito */
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+    /* Empieza transparente y 16px más abajo */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    /* Termina visible en su posición */
+  }
 }
+
+.form_exitoso__icono { font-size: 2.5rem; color: var(--gold); margin-bottom: 1rem; }
+.form_exitoso h3 { font-family: var(--fuente); font-size: 1.6rem; margin-bottom: 0.8rem; }
 .form_exitoso p { opacity: 0.8; line-height: 1.7; }
 
-/* Botón verde WhatsApp destacado */
+/* Botón directo a WhatsApp en la página de contacto */
 .btn_whatsapp {
   display: block;
   margin-top: 1.5rem;
@@ -441,7 +2352,6 @@ a { text-decoration: none; }
   font-weight: 700;
   font-size: 1rem;
   letter-spacing: 1px;
-  text-decoration: none;
   transition: background 0.25s, transform 0.2s;
 }
 .btn_whatsapp:hover {
@@ -449,95 +2359,4 @@ a { text-decoration: none; }
   color: white;
   transform: translateY(-2px);
 }
-
-/* ================================================
-   ARMA TU ESTILO (index)
-================================================ */
-.seccion_arma_estilo { padding: 4rem 0; background: var(--darkbrown); }
-.arma_subtitulo {
-  color: rgba(255,240,200,0.6); text-align: center;
-  margin-bottom: 2.5rem; font-size: 1rem; letter-spacing: 1px;
-}
-.selector_etiqueta {
-  display: block; color: var(--gold);
-  font-size: 0.78rem; letter-spacing: 2px;
-  text-transform: uppercase; margin-bottom: 0.5rem;
-}
-.selector {
-  width: 100%; padding: 0.75rem 1rem;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid goldenrod; border-radius: 6px;
-  color: var(--cream); font-family: 'Lato', sans-serif;
-  font-size: 0.95rem; cursor: pointer; outline: none;
-  color-scheme: dark;
-}
-.selector:focus { border-color: var(--gold); }
-.btn_armar {
-  padding: 0.85rem 3rem; background: var(--gold); border: none;
-  color: var(--darkbrown); font-family: 'Playfair Display', serif;
-  font-size: 1.1rem; letter-spacing: 2px; cursor: pointer;
-  border-radius: 4px; transition: background 0.25s, transform 0.2s;
-}
-.btn_armar:hover { background: var(--brick); color: var(--white); transform: scale(1.03); }
-.resultado_look {
-  background: rgba(255,255,255,0.05); border: 1px solid goldenrod;
-  border-radius: 12px; padding: 2.5rem; text-align: center;
-  max-width: 600px; margin: 0 auto; animation: aparecer 0.5s ease;
-}
-.resultado_look.oculto { display: none; }
-@keyframes aparecer { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-.resultado_look__icono { font-size: 2rem; color: var(--gold); margin-bottom: 1rem; }
-.resultado_look__titulo { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--cream); margin-bottom: 1rem; }
-.resultado_look__descripcion { color: rgba(255,240,200,0.75); line-height: 1.7; margin-bottom: 1.5rem; }
-.btn_comprar_look {
-  display: inline-block; padding: 0.65rem 2rem;
-  background: transparent; border: 1.5px solid var(--gold);
-  color: var(--gold); font-family: 'Lato', sans-serif;
-  font-size: 0.82rem; letter-spacing: 2px; text-transform: uppercase;
-  border-radius: 4px; cursor: pointer;
-  transition: background 0.25s, color 0.25s;
-}
-.btn_comprar_look:hover { background: var(--gold); color: var(--darkbrown); }
-
-/* ================================================
-   CONTACTO / FORMULARIO (index)
-================================================ */
-.seccion_contacto { padding: 4rem 0; background: var(--saddle); }
-.campo {
-  display: block; width: 100%; padding: 0.75rem 1rem; margin-bottom: 1rem;
-  background: rgba(255,255,255,0.08); border: 1px solid rgba(218,165,32,0.4);
-  border-radius: 6px; color: var(--cream); font-family: 'Lato', sans-serif;
-  font-size: 0.95rem; outline: none; transition: border-color 0.2s;
-}
-.campo::placeholder { color: rgba(245,239,230,0.4); }
-.campo:focus { border-color: var(--gold); }
-.btn_enviar {
-  padding: 0.75rem 2.5rem; background: var(--gold); border: none;
-  color: var(--darkbrown); font-family: 'Lato', sans-serif;
-  font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
-  cursor: pointer; border-radius: 4px; transition: background 0.25s;
-}
-.btn_enviar:hover { background: var(--brick); color: var(--white); }
-.datos_contacto { color: var(--cream); opacity: 0.85; }
-.datos_contacto p { margin-bottom: 1rem; padding-bottom: 0.8rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
-
-/* ================================================
-   SECCIONES PREVIEW EN INDEX (varones / mujeres)
-================================================ */
-.seccion_varones { padding: 4rem 0; background: var(--cream); }
-.seccion_mujeres { padding: 4rem 0; background: var(--cream2); }
-
-/* Botón "Ver catálogo completo" */
-.btn_ver_catalogo {
-  display: inline-block; margin-top: 2rem;
-  padding: 0.75rem 2.5rem;
-  border: 2px solid var(--saddle); color: var(--saddle);
-  font-family: 'Lato', sans-serif; font-size: 0.85rem;
-  letter-spacing: 2px; text-transform: uppercase;
-  border-radius: 4px; transition: background 0.25s, color 0.25s;
-}
-.btn_ver_catalogo:hover { background: var(--saddle); color: var(--cream); }
-.btn_ver_catalogo.gold {
-  border-color: var(--gold); color: var(--gold);
-}
-.btn_ver_catalogo.gold:hover { background: var(--gold); color: var(--darkbrown); }
+/* PÁGINA CONTACTO — termina aquí */
