@@ -18,6 +18,38 @@
 
 // Buscamos los elementos en el HTML por su id
 // getElementById busca el elemento que tenga id="ese-nombre"
+
+// Genera el menú igual en todas las páginas
+document.getElementById('menu_contenedor').innerHTML = `
+  <div class="capa_oscura" id="capa_oscura"></div>
+  <nav class="menu_cajon" id="menu_cajon">
+    <div class="menu_cajon__header">
+      <div class="menu_cajon__logo">LBP</div>
+      <button class="btn_cerrar" id="btn_cerrar"></button>
+    </div>
+    <ul class="menu_cajon__lista">
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="varones.html">Hombres</a></li>
+      <li><a href="mujeres.html">Mujeres</a></li>
+      <li><a href="promociones.html">Promociones</a></li>
+      <li><a href="ubicanos.html">Ubícanos</a></li>
+      <li><a href="contacto.html">Contacto</a></li>
+    </ul>
+  </nav>
+  <header class="barra_superior">
+    <button class="btn_hamburguesa" id="btn_abrir">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="barra_superior__logo">La Tienduca de LBP</div>
+    <span class="barra_superior__tag">Vintage · Lima</span>
+  </header>
+`;
+
+
+
+
+
+
 const menu_cajon  = document.getElementById('menu_cajon');
 const capa_oscura = document.getElementById('capa_oscura');
 const btn_abrir   = document.getElementById('btn_abrir');
@@ -78,7 +110,7 @@ document.querySelectorAll('.menu_cajon__lista a').forEach(link => {
 const pie = document.getElementById('pie_pagina');
 
 // Si existe en esta página, lo llenamos con el HTML del footer
-if (pie) {
+
   pie.innerHTML = `
     <div class="pie_pagina__grid">
 
@@ -129,7 +161,6 @@ if (pie) {
     </div>
     <p class="pie_pagina__copy">© 2026 La Tienduca de LBP · Lima, Perú · Todos los derechos reservados</p>
   `;
-}
 
 /* FOOTER DINÁMICO — termina aquí */
 
